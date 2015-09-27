@@ -7,12 +7,17 @@
 <script src='static/Chart.min.js'></script>   
 </head>
 <body style="text-align: center;">
-<h1 style="font-family: Walkway SemiBold;">InStats</h1>
-<h2 style="font-family: Walkway SemiBold;">for {{name}}</h2>
-
+<h1 style="font-family: Walkway SemiBold; font-size: 50px;">InStats for {{name}}</h1>
 <br>
-<canvas id="chart" width="600" height="400"></canvas>
-<canvas id="barchart" width="600" height="400"></canvas>
+<br>
+<canvas id="chart" width="1000" height="600"></canvas>
+<h2 style="font-family: Walkway SemiBold; font-size: 40px;">ratio of followers/following is {{ratio}}</h2>
+<br>
+<br>
+<br>
+<br>
+<br>
+<canvas id="barchart" width="1000" height="600"></canvas>
 
 <script>
    var pieData = [
@@ -59,7 +64,7 @@
    var mychart = document.getElementById("barchart").getContext("2d");
  
    steps = 10
-   max = 232
+   max = {{max_heightJS}}
    // draw bar chart
    new Chart(mychart).Bar(barData, {
         scaleOverride: true,
@@ -74,7 +79,7 @@
  
  
 </script>
-<h2 style="font-family: Walkway SemiBold;">average likes for the 10 most recent posts was {{avg_likes}}</h2>
+<h2 style="font-family: Walkway SemiBold; font-size: 40px;">average likes for the 10 most recent posts was {{avg_likes}}</h2>
 
 <br>
 <br>
