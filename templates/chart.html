@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>   
+<meta charset="utf-8" />   
+<title>InStats</title>      
+<!-- import plugin script -->   
+<script src='static/Chart.min.js'></script>   
+</head>
+<body style="text-align: center;">
+<h1 style="font-family: Walkway SemiBold;">InStats</h1>
+<h2 style="font-family: Walkway SemiBold;">for {{name}}</h2>
+
+<br>
+<canvas id="chart" width="600" height="400"></canvas>
+<canvas id="barchart" width="600" height="400"></canvas>
+
+<script>
+   var pieData = [
+            {% for item,label,colors in set %}
+                {
+                    value: {{item}},
+                    label: "{{label}}",
+                    color : "{{colors}}"
+                },
+                {% endfor %}
+ 
+ 
+         ];
+ 
+   // get bar chart canvas
+
+
+   // draw pie chart
+   new Chart(document.getElementById("chart").getContext("2d")).Doughnut(pieData);
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+   // bar chart data
+   var barData = {
+   labels : [{% for item in labels2 %}
+                  "{{item}}",
+              {% endfor %}],
+   datasets : [
+      {
+            fillColor: "rgba(151,187,205,0.2)",
+            strokeColor: "rgba(151,187,205,1)",
+            pointColor: "rgba(151,187,205,1)",
+         data : [{% for item in values2 %}
+                      {{item}},
+                    {% endfor %}]
+      }
+      ]
+   }
+ 
+   // get bar chart canvas
+   var mychart = document.getElementById("barchart").getContext("2d");
+ 
+   steps = 10
+   max = 232
+   // draw bar chart
+   new Chart(mychart).Bar(barData, {
+        scaleOverride: true,
+        scaleSteps: steps,
+        scaleStepWidth: Math.ceil(max / steps),
+        scaleStartValue: 0,
+        scaleShowVerticalLines: true,
+        scaleShowGridLines : true,
+        barShowStroke : true,
+        scaleShowLabels: true
+   });
+ 
+ 
+</script>
+<h2 style="font-family: Walkway SemiBold;">average likes for the 10 most recent posts was {{avg_likes}}</h2>
+
+<br>
+<br>
+<br>
+
+
+<!-- bar chart canvas element -->
+
+</body>
+</html>
