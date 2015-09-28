@@ -13,7 +13,7 @@ app = Flask(__name__)
 userinput = "user"
 
 # Convert username to ID
-u = requests.get("https://api.instagram.com/v1/users/search?q="+userinput+"/&access_token=ACCESS_TOKEN")
+u = requests.get("https://api.instagram.com/v1/users/search?q="+userinput+"/&access_token=")
 u.text
 
 
@@ -22,8 +22,8 @@ udata = json.loads(u.text)
 userid = (udata['data'][0]['id'])
 
 # Get account info
-a = requests.get('https://api.instagram.com/v1/users/'+userid+'/media/recent/?access_token=ACCESS_TOKEN&count=250')
-r = requests.get('https://api.instagram.com/v1/users/'+userid+'/?access_token=ACCESS_TOKEN')
+a = requests.get('https://api.instagram.com/v1/users/'+userid+'/media/recent/?access_token=&count=250')
+r = requests.get('https://api.instagram.com/v1/users/'+userid+'/?access_token=')
 r.text
 a.text
 
@@ -31,103 +31,79 @@ adata = json.loads(a.text)
 data = json.loads(r.text)
 
 
-n = 11
+n = 20
 sum = 0
 
-#  Like count
 for x in range(0,n): 
 	captions = int((adata['data'][x]['likes']['count']))
 	sum = sum + captions
 
 # Average likes
-avg_likes = sum/10
+avg_likes = sum/20
 
-#################################################### Post 1
+# Likes Count
+lc = []
 
-likes = int((adata['data'][0]['likes']['count']))
-likesvar = likes
+for x in range(0,n):
+	likes = int((adata['data'][x]['likes']['count']))
+	lc.append(likes)
 
-postdates = int((adata['data'][0]['created_time']))
-postdatesvar = time.strftime("%D", time.localtime(postdates))
+# Post Dates
+pd = []
 
-#################################################### Post 2
+for x in range(0,n):
+	postdates = int((adata['data'][x]['created_time']))
+	postdatesvar = str(time.strftime("%D", time.localtime(postdates)))
+	pd.append(postdatesvar)
 
+# Day frequency
+df = []
 
-likes1 = int((adata['data'][1]['likes']['count']))
-likesvar1 = likes1
+for x in range(0,n):
+	postdates = int((adata['data'][x]['created_time']))
+	postdatesvar = str(time.ctime(postdates)).split(" ")[0]
+	df.append(postdatesvar)
 
-postdates1 = int((adata['data'][1]['created_time']))
-postdatesvar1 = time.strftime("%D", time.localtime(postdates1))
-
-
-#################################################### Post 3
-
-likes2 = int((adata['data'][2]['likes']['count']))
-likesvar2 = likes2
-
-postdates2 = int((adata['data'][2]['created_time']))
-postdatesvar2 = time.strftime("%D", time.localtime(postdates2))
-
-#################################################### Post 4
-
-likes3 = int((adata['data'][3]['likes']['count']))
-likesvar3 = likes3
-
-postdates3 = int((adata['data'][3]['created_time']))
-postdatesvar3 = time.strftime("%D", time.localtime(postdates3))
-
-#################################################### Post 5
-
-likes4 = int((adata['data'][4]['likes']['count']))
-likesvar4 = likes4
-
-postdates4 = int((adata['data'][4]['created_time']))
-postdatesvar4 = time.strftime("%D", time.localtime(postdates4))
-
-#################################################### Post 6
+moncount = int(df.count("Mon"))
+tuecount = int(df.count("Tue"))
+wedcount = int(df.count("Wed"))
+thucount = int(df.count("Thu"))
+fricount = int(df.count("Fri"))
+satcount = int(df.count("Sat"))
+suncount = int(df.count("Sun"))
 
 
-likes5 = int((adata['data'][5]['likes']['count']))
-likesvar5 = likes5
+hm = []
 
-postdates5 = int((adata['data'][5]['created_time']))
-postdatesvar5 = time.strftime("%D", time.localtime(postdates5))
+for x in range(0,n):
+	postdates = int((adata['data'][x]['created_time']))
+	postdatesvar = str(time.strftime("%H", time.localtime(postdates)))
+	hm.append(postdatesvar)
 
-#################################################### Post 7
-
-
-likes6 = int((adata['data'][6]['likes']['count']))
-likesvar6 = likes6
-
-postdates6 = int((adata['data'][6]['created_time']))
-postdatesvar6 = time.strftime("%D", time.localtime(postdates6))
-
-#################################################### Post 8
-
-
-likes7 = int((adata['data'][7]['likes']['count']))
-likesvar7 = likes7
-
-postdates7 = int((adata['data'][7]['created_time']))
-postdatesvar7 = time.strftime("%D", time.localtime(postdates7))
-
-#################################################### Post 9
-
-
-likes8 = int((adata['data'][8]['likes']['count']))
-likesvar8 = likes8
-
-postdates8 = int((adata['data'][8]['created_time']))
-postdatesvar8 = time.strftime("%D", time.localtime(postdates8))
-
-#################################################### Post 10
-
-likes9 = int((adata['data'][9]['likes']['count']))
-likesvar9 = likes9
-
-postdates9 = int((adata['data'][9]['created_time']))
-postdatesvar9 = time.strftime("%D", time.localtime(postdates9))
-
+count1 = int(hm.count("1"))
+count2 = int(hm.count("2"))
+count3 = int(hm.count("3"))
+count4 = int(hm.count("4"))
+count5 = int(hm.count("5"))
+count6 = int(hm.count("6"))
+count7 = int(hm.count("7"))
+count8 = int(hm.count("8"))
+count9 = int(hm.count("9"))
+count10 = int(hm.count("10"))
+count11 = int(hm.count("11"))
+count12 = int(hm.count("12"))
+count13 = int(hm.count("13"))
+count14 = int(hm.count("14"))
+count15 = int(hm.count("15"))
+count16 = int(hm.count("16"))
+count17 = int(hm.count("17"))
+count18 = int(hm.count("18"))
+count19 = int(hm.count("19"))
+count20 = int(hm.count("20"))
+count21 = int(hm.count("21"))
+count22 = int(hm.count("22"))
+count23 = int(hm.count("23"))
+count24 = int(hm.count("24"))
 
 
 
@@ -138,18 +114,23 @@ followers = (data['data']['counts']['followed_by'])
 follows = (data['data']['counts']['follows'])
 ratio = round(float(followers)/float(follows),2)
 
-
-max_height = max(likes,likes1, likes2)
+# Max height of barchart
+max_height = max(lc)
 max_heightJS = int(max_height) + (int(max_height)*0.30)
+
 
 @app.route("/")
 def chart():
     labels = ["Followers","Follows"]
     values = [followers,follows]
     colors = ["#46BFBD","#F7464A"]
-    labels2 = [postdatesvar,postdatesvar1,postdatesvar2,postdatesvar3,postdatesvar4,postdatesvar5,postdatesvar6,postdatesvar7,postdatesvar8,postdatesvar9]
-    values2 = [likesvar,likesvar1,likesvar2,likesvar3,likesvar4,likesvar5,likesvar6,likesvar7,likesvar8,likesvar9]
-    return render_template('chart.html', set=zip(values, labels, colors), name=name, avg_likes=avg_likes, posts=posts, followers=followers, follows=follows,values2=values2, labels2=labels2, max_heightJS=max_heightJS, ratio=ratio)
+    labels2 = pd
+    values2 = lc
+    labels3 = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
+    values3 = [moncount,tuecount,wedcount,thucount,fricount,satcount,suncount]
+    labels4 = ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00',]
+    values4 = [count24, count1, count2, count3, count4, count5, count6, count7, count8, count9, count10, count11, count12, count13, count14, count15, count16, count17, count18, count19, count20, count21, count22, count23,]
+    return render_template('chart.html', set=zip(values, labels, colors), name=name, avg_likes=avg_likes, posts=posts, followers=followers, follows=follows, values2=values2, labels2=labels2, max_heightJS=max_heightJS, ratio=ratio, values3=values3, labels3=labels3, values4=values4, labels4=labels4)
 
 
 # @app.route('/name')

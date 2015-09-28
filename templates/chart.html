@@ -4,24 +4,45 @@
 <meta charset="utf-8" />   
 <title>InStats</title>      
 <!-- import plugin script -->   
-<script src='static/Chart.min.js'></script>   
+<script src='static/Chart.min.js'></script> 
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">  
 </head>
 <body style="text-align: center;">
-<h1 style="font-family: Walkway SemiBold; font-size: 50px;">InStats for {{name}}</h1>
+<h1 style="font-family: Walkway UltraBold; font-size: 50px;">InStats for {{name}}</h1>
 <br>
 <br>
-<canvas id="chart" width="1000" height="600"></canvas>
+<canvas id="chart" width="900" height="500"></canvas>
 <h2 style="font-family: Walkway SemiBold; font-size: 40px;">ratio of followers/following is {{ratio}}</h2>
 <br>
 <br>
 <br>
 <br>
 <br>
-<canvas id="barchart" width="1000" height="600"></canvas>
+<canvas id="barchart" width="900" height="500"></canvas>
+<h2 style="font-family: Walkway SemiBold; font-size: 40px;">average likes for the 20 most recent posts was {{avg_likes}}</h2>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div> 
+  <div style="float:left; padding-left: 180px; padding-bottom: 100px">
+    <h2 style="font-family: Walkway SemiBold; font-size: 30px;"><i class="glyphicon glyphicon-calendar"></i> day posted distribution</h2> <br>
+    <canvas id="radar" width="400" height="400"></canvas>
+  </div>
+  <div style="float: right; padding-right: 180px; padding-bottom: 100px">
+    <h2 style="font-family: Walkway SemiBold; font-size: 30px;"><i class="glyphicon glyphicon-time"></i> hour posted distribution</h2> <br>
+    <canvas id="radar2" width="400" height="400"></canvas>
+  </div>
+</div>
+<br>`
+<br>
 
 <script>
+///////////////////////////////////////////////////////////////////////////////////////////////////////// Doughnut
    var pieData = [
-            {% for item,label,colors in set %}
+                {% for item,label,colors in set %}
                 {
                     value: {{item}},
                     label: "{{label}}",
@@ -30,7 +51,7 @@
                 {% endfor %}
  
  
-         ];
+                ];
  
    // get bar chart canvas
 
@@ -40,8 +61,7 @@
 
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////// Bar
 
    // bar chart data
    var barData = {
@@ -49,16 +69,16 @@
                   "{{item}}",
               {% endfor %}],
    datasets : [
-      {
+            {
             fillColor: "rgba(151,187,205,0.2)",
             strokeColor: "rgba(151,187,205,1)",
             pointColor: "rgba(151,187,205,1)",
-         data : [{% for item in values2 %}
+            data : [{% for item in values2 %}
                       {{item}},
                     {% endfor %}]
-      }
-      ]
-   }
+            }
+              ]
+                  }
  
    // get bar chart canvas
    var mychart = document.getElementById("barchart").getContext("2d");
@@ -72,19 +92,69 @@
         scaleStepWidth: Math.ceil(max / steps),
         scaleStartValue: 0,
         scaleShowVerticalLines: true,
-        scaleShowGridLines : true,
+        scaleShowGridLines : false,
         barShowStroke : true,
         scaleShowLabels: true
-   });
- 
- 
+   })
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////// Radar 1
+   var radarData = {
+   labels : [{% for item in labels3 %}
+                  "{{item}}",
+              {% endfor %}],
+  
+    datasets: [
+            {
+      label: "Days",
+      fillColor: "rgba(232,66,66,0.2)",
+      strokeColor: "rgba(209,38,38,1)",
+      pointColor: "rgba(238,98,98,1)",
+      pointStrokeColor: "#fff",
+      pointHighlightFill: "#fff",
+      pointHighlightStroke: "rgba(220,220,220,1)",
+         data : [{% for item in values3 %}
+                      {{item}},
+                    {% endfor %}]
+        }
+              ]
+                  }
+  //  }
+     new Chart(document.getElementById("radar").getContext("2d")).Radar(radarData);
+
+
+     ///////////////////////////////////////////////////////////////////////////////////////////////////////// Radar 2
+   var radarData2 = {
+   labels : [{% for item in labels4 %}
+                  "{{item}}",
+              {% endfor %}],
+  
+    datasets: [
+            {
+      label: "Days",
+      fillColor: "rgba(78,235,89,0.2)",
+      strokeColor: "rgba(79,182,86,1)",
+      pointColor: "rgba(151,187,205,1)",
+      pointStrokeColor: "#fff",
+      pointHighlightFill: "#fff",
+      pointHighlightStroke: "rgba(220,220,220,1)",
+         data : [{% for item in values4 %}
+                      {{item}},
+                    {% endfor %}]
+        }
+              ]
+                  }
+  //  }
+     new Chart(document.getElementById("radar2").getContext("2d")).Radar(radarData2);
+
+
+
+
 </script>
-<h2 style="font-family: Walkway SemiBold; font-size: 40px;">average likes for the 10 most recent posts was {{avg_likes}}</h2>
+
 
 <br>
 <br>
 <br>
-
 
 <!-- bar chart canvas element -->
 
