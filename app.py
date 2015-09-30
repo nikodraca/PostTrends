@@ -31,6 +31,14 @@ satcount = None
 suncount = None
 hmc = None
 
+# @app.route('/')
+# def my_form():
+#     return render_template("index.html")
+
+# @app.route('/', methods=['GET'])
+# def my_form_post():
+#     text = request.form['username']
+#     getdata(text)
 
 @app.route("/")
 def getdata(userinput):
@@ -60,7 +68,7 @@ def getdata(userinput):
 	# userinput = raw_input("Enter a user name: ")
 
 	# Convert username to ID
-	u = requests.get("https://api.instagram.com/v1/users/search?q="+userinput+"/&access_token=ACCESS_TOKEN")
+	u = requests.get("https://api.instagram.com/v1/users/search?q="+userinput+"/&access_token=AT")
 	u.text
 
 
@@ -69,8 +77,8 @@ def getdata(userinput):
 	userid = (udata['data'][0]['id'])
 
 	# Get account info
-	a = requests.get('https://api.instagram.com/v1/users/'+userid+'/media/recent/?access_token=ACCESS_TOKEN&count=250')
-	r = requests.get('https://api.instagram.com/v1/users/'+userid+'/?access_token=ACCESS_TOKEN')
+	a = requests.get('https://api.instagram.com/v1/users/'+userid+'/media/recent/?access_token=AT&count=250')
+	r = requests.get('https://api.instagram.com/v1/users/'+userid+'/?access_token=AT')
 	r.text
 	a.text
 
