@@ -8,8 +8,8 @@
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">  
 </head>
 <body style="text-align: center;">
-
-<div class="row-center" style="padding-left: 25%; padding-right: 25%; padding-top:20px;">
+<nav class="navbar navbar-default">
+<div class="row-center" style="padding-left: 25%; padding-right: 25%; padding-top:20px; padding-bottom: 20px;">
 <!--   <div class="col-lg-6">
  -->    <form action="chart" method="GET">
       <div class="input-group">
@@ -22,43 +22,60 @@
     </form>
   </div>
 </div>
+</nav>
 
-<!-- 
-  <form action="chart" method="GET">
-    <input type="text" name="username">
-    <input type="submit">
-  </form> -->
-
+<div>
 <h1 style="font-family: Walkway UltraBold; font-size: 50px;">InStats for {{userinput}}</h1>
+<h2 style="font-family: Walkway SemiBold; font-size: 20px;">based on the 20 most recent posts</h2>
+</div>
 <br>
 <br>
+<br>
+<div>
 <canvas id="chart" width="900" height="500"></canvas>
 <h2 style="font-family: Walkway SemiBold; font-size: 40px;">ratio of followers/following is {{ratio}}</h2>
+</div>
 <br>
 <br>
-<br>
-<br>
-<br>
-<canvas id="barchart" width="900" height="500"></canvas>
-<h2 style="font-family: Walkway SemiBold; font-size: 40px;">average likes for the 20 most recent posts was {{avg_likes}}</h2>
-<br>
-<br>
-<br>
+<hr>
 <br>
 <br>
 <br>
 <div> 
-  <div style="float:left; padding-left: 180px; padding-bottom: 100px">
-    <h2 style="font-family: Walkway SemiBold; font-size: 30px;"><i class="glyphicon glyphicon-calendar"></i> day posted distribution</h2> <br>
-    <canvas id="radar" width="400" height="400"></canvas>
-  </div>
-  <div style="float: right; padding-right: 180px; padding-bottom: 100px">
-    <h2 style="font-family: Walkway SemiBold; font-size: 30px;"><i class="glyphicon glyphicon-time"></i> hour posted distribution</h2> <br>
-    <canvas id="radar2" width="400" height="400"></canvas>
-  </div>
+<canvas id="barchart" width="900" height="500"></canvas>
+<h2 style="font-family: Walkway SemiBold; font-size: 40px;">average likes was {{avg_likes}}</h2>
 </div>
 <br>
 <br>
+<hr>
+<br>
+<br>
+
+<div class="container">
+
+  <div style="float:left;">
+    <h2 style="font-family: Walkway SemiBold; font-size: 30px;"><i class="glyphicon glyphicon-calendar"></i> day posted distribution</h2> <br>
+    <canvas id="radar" width="400" height="400"></canvas>
+  </div>
+
+  <div style="float:right;">
+    <h2 style="font-family: Walkway SemiBold; font-size: 30px;"><i class="glyphicon glyphicon-time"></i> hour posted distribution</h2> <br>
+    <canvas id="radar2" width="400" height="400"></canvas>
+  </div>
+
+</div>
+<br>
+<br>
+<hr>
+<br>
+<div class="row-center">
+<h2 style="font-family: Walkway SemiBold; font-size: 30px;">popularity of hashtags (log scale)</h2> 
+<h2 style="font-family: Walkway SemiBold; font-size: 30px;">{{hashtagerrormsg}}</h2> 
+<br>
+<br>
+<canvas id="barchart2" width="900" height="500"></canvas>
+</div>
+
 
 <script>
 ///////////////////////////////////////////////////////////////////////////////////////////////////////// Doughnut
@@ -107,7 +124,7 @@
    steps = 10
    max = {{max_heightJS}}
    // draw bar chart
-   new Chart(mychart).Bar(barData, {
+   new Chart(mychart).Line(barData, {
         scaleOverride: true,
         scaleSteps: steps,
         scaleStepWidth: Math.ceil(max / steps),
@@ -169,6 +186,43 @@
 
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////// Bar 2
+
+   // bar chart data
+   var barData2 = {
+   labels : [{% for item in labels5 %}
+                  "{{item}}",
+              {% endfor %}],
+   datasets : [
+            {
+            fillColor: "rgba(167,80,230,0.2)",
+            strokeColor: "rgba(210,162,245,1)",
+            pointColor: "rgba(238,98,98,1)",
+        data : [{% for item in values5 %}
+                      {{item}},
+                    {% endfor %}]
+            }
+              ]
+                  }
+      
+   // get bar chart canvas
+   var mychartbar2 = document.getElementById("barchart2").getContext("2d");
+ 
+   steps = 10
+   max = {{max_height2JS}}
+   // draw bar chart
+   new Chart(mychartbar2).Bar(barData2, {
+        scaleOverride: false,
+        scaleSteps: steps,
+        scaleStepWidth: Math.ceil(max / steps),
+        scaleStartValue: 0,
+        scaleShowVerticalLines: false,
+        scaleShowHorizontalLines: false,
+        scaleShowGridLines : false,
+        barShowStroke : true,
+        scaleShowLabels: true,
+   })
+
 
 </script>
 
@@ -178,6 +232,11 @@
 <br>
 
 <!-- bar chart canvas element -->
-
+<div class="footer">
+<hr>
+<h2 style="font-family: Walkway SemiBold; font-size: 20px;">
+ nikola draca, 2015
+ </h2> 
+</div>
 </body>
 </html>
