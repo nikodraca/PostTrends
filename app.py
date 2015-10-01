@@ -42,15 +42,9 @@ hashtagerrormsg = None
 zeroerrormsg = None
 usererrormessage = None
 
-
-# @app.route('/')
-# def my_form():
-#     return render_template("index.html")
-
-# @app.route('/', methods=['GET'])
-# def my_form_post():
-#     text = request.form['username']
-#     getdata(text)
+@app.route('/')
+def home():
+	return render_template('index.html')
 
 @app.route("/")
 def getdata(userinput):
@@ -90,7 +84,7 @@ def getdata(userinput):
 	# userinput = raw_input("Enter a user name: ")
 
 	# Convert username to ID
-	u = requests.get("https://api.instagram.com/v1/users/search?q="+userinput+"/&access_token=AT")
+	u = requests.get("https://api.instagram.com/v1/users/search?q="+userinput+"/&access_token=")
 	u.text
 
 
@@ -107,8 +101,8 @@ def getdata(userinput):
 		usererrormessage = " (User not found, here's Instagram instead!)"
 
 	# Get account info
-	a = requests.get('https://api.instagram.com/v1/users/'+userid+'/media/recent/?access_token=AT&count=250')
-	r = requests.get('https://api.instagram.com/v1/users/'+userid+'/?access_token=AT')
+	a = requests.get('https://api.instagram.com/v1/users/'+userid+'/media/recent/?access_token=&count=250')
+	r = requests.get('https://api.instagram.com/v1/users/'+userid+'/?access_token=')
 	r.text
 	a.text
 

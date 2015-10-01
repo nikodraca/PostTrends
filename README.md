@@ -1,5 +1,4 @@
-# InStats
+# InStats-private
+Copy of Instats Repo but for Heroku deployment
 
-Analytics/data visualization platform for instagram
-
-Data with Python, Visualization with ChartJS
+This is to hide my access-token, but still share my code
