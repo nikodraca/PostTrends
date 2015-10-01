@@ -39,6 +39,7 @@ hdup2 = None
 htgscount = None
 logt = None
 hashtagerrormsg = None
+zeroerrormsg = None
 
 
 # @app.route('/')
@@ -81,6 +82,7 @@ def getdata(userinput):
 	global htgscount
 	global logt
 	global hashtagerrormsg
+	global zeroerrormsg
 
 	# Enter your user name
 	# userinput = raw_input("Enter a user name: ")
@@ -240,7 +242,14 @@ def getdata(userinput):
 	posts = (data['data']['counts']['media'])
 	followers = (data['data']['counts']['followed_by'])
 	follows = (data['data']['counts']['follows'])
-	ratio = round(float(followers)/float(follows),2)
+	try:
+		ratio = round(float(followers)/float(follows),2)
+		zeroerrormsg = ""
+
+
+	except ZeroDivisionError:
+		ratio = "0"
+		zeroerrormsg = ", follows nobody"
 
 	# Max height of barchart
 	try:
@@ -271,7 +280,7 @@ def chart():
     labels5 = htgsfinal
     values5 = htgscount
     return render_template('chart.html', set=zip(values, labels, colors), userinput=userinput, avg_likes=avg_likes, posts=posts, followers=followers, follows=follows, values2=values2, labels2=labels2, max_heightJS=max_heightJS, max_height2JS=max_height2JS, ratio=ratio, values3=values3, labels3=labels3,
-    						values4=values4, labels4=labels4, values5=values5, labels5=labels5, hashtagerrormsg=hashtagerrormsg)
+    						values4=values4, labels4=labels4, values5=values5, labels5=labels5, hashtagerrormsg=hashtagerrormsg, zeroerrormsg=zeroerrormsg)
 
 # @app.route('/name')
 # def whatever():
