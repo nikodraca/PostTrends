@@ -5,7 +5,7 @@
 <title>InStats</title>      
 <!-- import plugin script -->   
 <script src='static/Chart.min.js'></script> 
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">  
+<link rel="stylesheet" href="static/bootstrap-3.3.5-dist/css/bootstrap.min.css">  
 </head>
 <body style="text-align: center;">
 <nav class="navbar navbar-default">
@@ -25,15 +25,16 @@
 </nav>
 
 <div>
-<h1 style="font-family: Walkway UltraBold; font-size: 50px;">InStats for {{userinput}}</h1>
-<h2 style="font-family: Walkway SemiBold; font-size: 20px;">based on the 20 most recent posts</h2>
+<h1 style="font-size: 50px;">InStats for {{userinput}}</h1>
+<h2 style="font-size: 20px;">{{usererrormessage}}</h2>
+<h2 style="font-size: 20px;">based on the 20 most recent posts</h2>
 </div>
 <br>
 <br>
 <br>
 <div>
 <canvas id="chart" width="900" height="500"></canvas>
-<h2 style="font-family: Walkway SemiBold; font-size: 40px;">ratio of followers/following is {{ratio}}{{zeroerrormsg}}</h2>
+<h2 style="font-size: 40px;">ratio of followers/following is {{ratio}}{{zeroerrormsg}}</h2>
 </div>
 <br>
 <br>
@@ -43,7 +44,7 @@
 <br>
 <div> 
 <canvas id="barchart" width="900" height="500"></canvas>
-<h2 style="font-family: Walkway SemiBold; font-size: 40px;">average likes was {{avg_likes}}</h2>
+<h2 style="font-size: 40px;">average likes was {{avg_likes}}</h2>
 </div>
 <br>
 <br>
@@ -54,12 +55,12 @@
 <div class="container">
 
   <div style="float:left;">
-    <h2 style="font-family: Walkway SemiBold; font-size: 30px;"><i class="glyphicon glyphicon-calendar"></i> day posted distribution</h2> <br>
+    <h2 style="font-size: 30px;"><i class="glyphicon glyphicon-calendar"></i> day posted distribution</h2> <br>
     <canvas id="radar" width="400" height="400"></canvas>
   </div>
 
   <div style="float:right;">
-    <h2 style="font-family: Walkway SemiBold; font-size: 30px;"><i class="glyphicon glyphicon-time"></i> hour posted distribution</h2> <br>
+    <h2 style="font-size: 30px;"><i class="glyphicon glyphicon-time"></i> hour posted distribution</h2> <br>
     <canvas id="radar2" width="400" height="400"></canvas>
   </div>
 
@@ -69,8 +70,8 @@
 <hr>
 <br>
 <div class="row-center">
-<h2 style="font-family: Walkway SemiBold; font-size: 30px;">popularity of hashtags (log scale)</h2> 
-<h2 style="font-family: Walkway SemiBold; font-size: 30px;">{{hashtagerrormsg}}</h2> 
+<h2 style="font-size: 30px;">popularity of hashtags (log scale)</h2> 
+<h2 style="font-size: 30px;">{{hashtagerrormsg}}</h2> 
 <br>
 <br>
 <canvas id="barchart2" width="900" height="500"></canvas>
@@ -234,7 +235,7 @@
 <!-- bar chart canvas element -->
 <div class="footer">
 <hr>
-<h2 style="font-family: Walkway SemiBold; font-size: 20px;">
+<h2 style="font-size: 20px;">
  nikola draca, 2015
  </h2> 
 </div>

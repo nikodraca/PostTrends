@@ -40,6 +40,7 @@ htgscount = None
 logt = None
 hashtagerrormsg = None
 zeroerrormsg = None
+usererrormessage = None
 
 
 # @app.route('/')
@@ -83,22 +84,31 @@ def getdata(userinput):
 	global logt
 	global hashtagerrormsg
 	global zeroerrormsg
+	global usererrormessage
 
 	# Enter your user name
 	# userinput = raw_input("Enter a user name: ")
 
 	# Convert username to ID
-	u = requests.get("https://api.instagram.com/v1/users/search?q="+userinput+"/&access_token=8593252.c09ec1a.83deea9350bf4bb39f82c5937c86e56b")
+	u = requests.get("https://api.instagram.com/v1/users/search?q="+userinput+"/&access_token=AT")
 	u.text
 
 
 	udata = json.loads(u.text)
 
-	userid = (udata['data'][0]['id'])
+	try:
+		userid = (udata['data'][0]['id'])
+		usererrormessage = ''
+
+
+
+	except IndexError:
+		userid = '25025320'
+		usererrormessage = " (User not found, here's Instagram instead!)"
 
 	# Get account info
-	a = requests.get('https://api.instagram.com/v1/users/'+userid+'/media/recent/?access_token=8593252.c09ec1a.83deea9350bf4bb39f82c5937c86e56b&count=250')
-	r = requests.get('https://api.instagram.com/v1/users/'+userid+'/?access_token=8593252.c09ec1a.83deea9350bf4bb39f82c5937c86e56b')
+	a = requests.get('https://api.instagram.com/v1/users/'+userid+'/media/recent/?access_token=AT&count=250')
+	r = requests.get('https://api.instagram.com/v1/users/'+userid+'/?access_token=AT')
 	r.text
 	a.text
 
@@ -280,7 +290,7 @@ def chart():
     labels5 = htgsfinal
     values5 = htgscount
     return render_template('chart.html', set=zip(values, labels, colors), userinput=userinput, avg_likes=avg_likes, posts=posts, followers=followers, follows=follows, values2=values2, labels2=labels2, max_heightJS=max_heightJS, max_height2JS=max_height2JS, ratio=ratio, values3=values3, labels3=labels3,
-    						values4=values4, labels4=labels4, values5=values5, labels5=labels5, hashtagerrormsg=hashtagerrormsg, zeroerrormsg=zeroerrormsg)
+    						values4=values4, labels4=labels4, values5=values5, labels5=labels5, hashtagerrormsg=hashtagerrormsg, zeroerrormsg=zeroerrormsg, usererrormessage=usererrormessage)
 
 # @app.route('/name')
 # def whatever():
@@ -290,12 +300,3 @@ def chart():
 if __name__ == "__main__":
     app.debug = True
     app.run(host='0.0.0.0', port=5001)
-
-
-
-
-
-
-
-
-
