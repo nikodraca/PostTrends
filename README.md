@@ -1,4 +1,6 @@
-# InStats-private
-Copy of Instats Repo but for Heroku deployment
+# InStats
+Instagram analytics platform
 
-This is to hide my access-token, but still share my code
+Enter a username, receive some interesting stats about posting habits
+
+Data in Python and Flask, using Instagram API. Visualization in Chart.JS
