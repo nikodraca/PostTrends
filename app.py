@@ -121,6 +121,10 @@ def getdata(userinput):
 			sum = sum + captions
 		except IndexError:
 			captionserrormsg = "Not enough posts to give significant analysis, sorry!"
+		except KeyError:
+			userid = '25025320'
+			usererrormessage = " (User private, here's Instagram instead!)"
+
 
 
 	# Average likes
@@ -135,6 +139,10 @@ def getdata(userinput):
 			lc.append(likes)
 		except IndexError:
 			captionserrormsg = "Not enough posts to give significant analysis, sorry!"
+		except KeyError:
+			userid = '25025320'
+			usererrormessage = " (User private)"
+
 
 	# Post Dates
 	pd = []
@@ -146,6 +154,10 @@ def getdata(userinput):
 			pd.append(postdatesvar)
 		except IndexError:
 			captionserrormsg = "Not enough posts to give significant analysis, sorry!"
+		except KeyError:
+			userid = '25025320'
+			usererrormessage = " (User private)"
+
 
 	# Day frequency
 	df = []
@@ -157,6 +169,10 @@ def getdata(userinput):
 			df.append(postdatesvar)
 		except IndexError:
 			captionserrormsg = "Not enough posts to give significant analysis, sorry!"
+		except KeyError:
+			userid = '25025320'
+			usererrormessage = " (User private)"
+
 
 
 	moncount = int(df.count("Mon"))
@@ -180,6 +196,10 @@ def getdata(userinput):
 			hm.append(postdatesvar)
 		except IndexError:
 			captionserrormsg = "Not enough posts to give significant analysis, sorry!"
+		except KeyError:
+			userid = '25025320'
+			usererrormessage = " (User private)"
+
 
 
 
@@ -205,6 +225,11 @@ def getdata(userinput):
 				htgs.append(item)
 		except IndexError:
 			captionserrormsg = "Not enough posts to give significant analysis, sorry!"
+		except KeyError:
+			userid = '25025320'
+			usererrormessage = " (User private)"
+
+
 
 	# Remove duplicates
 
@@ -243,13 +268,26 @@ def getdata(userinput):
 
 	# Find variables
 	# name = (data['data']['full_name'])
-	posts = (data['data']['counts']['media'])
-	followers = (data['data']['counts']['followed_by'])
-	follows = (data['data']['counts']['follows'])
+	try:
+		posts = (data['data']['counts']['media'])
+	except KeyError:
+		posts = 0
+		usererrormessage = " (User private)"
+	try:
+		followers = (data['data']['counts']['followed_by'])
+	except KeyError:
+		followers = 0
+		usererrormessage = " (User private)"
+
+	try:
+		follows = (data['data']['counts']['follows'])
+	except KeyError:
+		follows = 0
+		usererrormessage = " (User private)"
+
 	try:
 		ratio = round(float(followers)/float(follows),2)
 		zeroerrormsg = ""
-
 
 	except ZeroDivisionError:
 		ratio = "0"
