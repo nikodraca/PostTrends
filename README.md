@@ -1,6 +1,9 @@
 # InStats
-Instagram analytics platform
 
-Enter a username, receive some interesting stats about posting habits
+www.instats.ca
 
-Data in Python and Flask, using Instagram API. Visualization in Chart.JS
+Simple Instagram analytics platform.
+
+Enter a username and quickly receive interesting data about the user's posting habits.
+
+Data anaylsis in Python and Flask, using Instagram API. Visualization with Chart.JS, D3.JS.
