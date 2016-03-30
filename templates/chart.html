@@ -187,7 +187,10 @@
 						<a name="likes"></a>
 						<h2 class="chart-header">Average Likes was {{avg_likes}}</h2>
 						<canvas id="likesChart"></canvas>
-						<div style="padding-top:15px; padding-bottom: 20px;">Likes <i class="glyphicon glyphicon-stop" style="color:rgba(151,187,205,1);"></i> Comments <i class="glyphicon glyphicon-stop" style="color: rgba(209,38,38,1);"></i></div>
+						<div style="padding-top:15px;padding-bottom: 20px;">
+							Likes <i class="glyphicon glyphicon-stop" style="color:rgba(151,187,205,1);"></i> 
+							Comments <i class="glyphicon glyphicon-stop" style="color: rgba(209,38,38,1);"></i>
+						</div>
 					</div>
 					
 					<hr class="chart">
@@ -265,25 +268,19 @@
 			function initialize() {
 			    var map;
 			    var bounds = new google.maps.LatLngBounds();
+			    var style
 			    var mapOptions = {
 			        mapTypeId: 'roadmap',
-			        scrollwheel: false
+			        scrollwheel: false,
+			        styles: [{"featureType":"administrative","elementType":"labels.text.fill","stylers":[{"color":"#444444"}]},{"featureType":"landscape","elementType":"all","stylers":[{"color":"#f2f2f2"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"all","stylers":[{"saturation":-100},{"lightness":45}]},{"featureType":"road.highway","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"road.arterial","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#97BBCD"},{"visibility":"on"}]}]
+
+
 				};
 			                    
 			    // Display a map on the page
 			    map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
 			    map.setTilt(45);
-			        
-			    // Info Window Content
-			    // var infoWindowContent = [
-			    //     ['<div class="info_content">' +
-			    //     '<h3>London Eye</h3>' +
-			    //     '<p>The London Eye is a giant Ferris wheel situated on the banks of the River Thames. The entire structure is 135 metres (443 ft) tall and the wheel has a diameter of 120 metres (394 ft).</p>' +        '</div>'],
-			    //     ['<div class="info_content">' +
-			    //     '<h3>Palace of Westminster</h3>' +
-			    //     '<p>The Palace of Westminster is the meeting place of the House of Commons and the House of Lords, the two houses of the Parliament of the United Kingdom. Commonly known as the Houses of Parliament after its tenants.</p>' +
-			    //     '</div>']
-			    // ];
+			   
 				    
 			  	var latTemp = {{geolat}};
 			    var longTemp = {{geolong}};
@@ -301,23 +298,12 @@
 			            title: nameTemp[i]
 			        });
 			    }
-			  
-		        /*
-		        // Allow each marker to have an info window    
-		        google.maps.event.addListener(marker, 'click', (function(marker, i) {
-		            return function() {
-		                infoWindow.setContent(infoWindowContent[i][0]);
-		                infoWindow.open(map, marker);
-		            }
-		        })(marker, i));*/
-		
-		        // Automatically center the map fitting all markers on the screen
+
 				map.fitBounds(bounds);
 			    // }
 			
 			    // Override our map zoom level once our fitBounds function runs (Make sure it only runs once)
 		    	var boundsListener = google.maps.event.addListener((map), 'bounds_changed', function(event) {
-		        // this.setZoom(4);
 		        google.maps.event.removeListener(boundsListener);
 			    });
 			}
@@ -335,7 +321,9 @@
 			];
 			
 			var options = {
-				responsive: true
+				responsive: true,
+				maintainAspectRatio: true
+
 			}
 			
 			var followersChart = new Chart(document.getElementById("followersChart").getContext("2d")).Doughnut(data, options);
