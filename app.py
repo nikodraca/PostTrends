@@ -5,6 +5,7 @@ import time
 import math
 import datetime
 import creds
+from collections import Counter
 
 app = Flask(__name__)
 
@@ -56,12 +57,14 @@ def get_data(user_input):
 	all_data = {}
 	all_data['likes'] = likes 
 	all_data['comments'] = comments
-	all_data['days'] = days
-	all_data['hours'] = hours
-	all_data['filters'] = filters
+	all_data['days'] = dict(Counter(days))
+	all_data['hours'] = dict(Counter(hours))
+	all_data['filters'] = dict(Counter(filters))
 	all_data['locations'] = locations
 	all_data['tags'] = tags
 	all_data['tag_positions'] = tag_positions
+
+	# return json.dumps(Counter(days))
 
 	return json.dumps(all_data)
 
