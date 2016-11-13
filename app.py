@@ -9,9 +9,13 @@ import creds
 app = Flask(__name__)
 
 @app.route('/')
-def get_data():
+def home():
+	return "home page"
+
+@app.route('/u/<user_input>')
+def get_data(user_input):
 	# Username -> id
-	user = requests.get("https://api.instagram.com/v1/users/search?q=%s&access_token=%s" % ("nikodraca", creds.ACCESS_TOKEN))
+	user = requests.get("https://api.instagram.com/v1/users/search?q=%s&access_token=%s" % (user_input, creds.ACCESS_TOKEN))
 
 	if not (user.json()['data']):
 		return "Error loading profile. Make sure profile is public and exists."
