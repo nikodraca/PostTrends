@@ -1,471 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>InStats | {{userinput}}</title>
-		<link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico')}}"> 
-		
-		<link rel="stylesheet" href="static/bootstrap-3.3.5-dist/css/bootstrap.min.css"> 
-        <script src='static/Chart.min.js'></script> 
+<html>
+<head>
+	<title></title>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
+</head>
+<body>
+<!-- {{all_data['basic']}} -->
 
-		<!--<script src='../static/chart.min.js'></script>-->
-		
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		
-		<!--<link rel="stylesheet" href="../static/bootstrap-3.3.5-dist/css/bootstrap.min.css">-->
-		<script>
-			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+{{all_data['basic']['username']}}
+{{all_data['basic']['counts']['followed_by']}}
+{{all_data['basic']['counts']['follows']}}
+{{(all_data['basic']['counts']['followed_by']/all_data['basic']['counts']['follows'])|round(2)}}
+<img src="{{all_data['basic']['profile_picture']}}">
 
-			ga('create', 'UA-68367110-1', 'auto');
-			ga('send', 'pageview');
-		</script>
-	 
-		<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
-		<script src="static/datamaps.world.min.js"></script>
-	 
-		<style type="text/css">
-			.row {
-				margin: 0px;
-			}
-
-			html, body {
-				height: 100%;
-       			background-color:#3b444b;
-			}
-
-			.transp {
-				background:none!important;
-				background-color: rgba(255,255,255,0.8)!important;
-				border:none!important;
-				border-color:none!important;
-				text-shadow:none!important;
-				box-shadow:none!important;
-				}
-
-			hr {
-			    display: block;
-			    height: 1px;
-			    border: 0;
-			    border-top: 1px solid #3b444b;
-			    margin: 1em 0;
-			    padding: 0; 
-}
+<canvas id="myChart" width="100" height="100"></canvas>
 
 
-
-			.row-center {
-
-			background-color: #ece7e7;
-			padding-bottom: 2%;
-
-			}
-
-			h1,h2 {
-				color: #3b444b;
-
-			}
-			
-			.col-md-10 {
-				text-align: center;
-				padding-bottom: 100px;
-				padding-top: 15px;
-				background-color: #ece7e7;
-			}
-			.col-md-2 {
-
-				background-color: #3b444b;
-				padding-left: 0;
-				padding-right: 0;
-
-			}
-			
-			.chart {
-				margin-top:5%!important;
-				margin-bottom:5%!important;
-			}
-
-			.container-fluid {
-				padding-right: 0px;
-			}
-			
-			.chart-header {
-				padding-bottom: 15px;
-				font-size: 30px;
-			}
-
-			header {
-				height:270px;
-			}
-
-			@media (min-width: 979px) {
-				.col-md-9 {
-					padding-right: 25%;
-				}
-			
-				#sidebar.affix-top {
-					position: static;
-					margin-top:25px;
-					width:228px;
-				}
-			  
-				#sidebar.affix {
-					position: fixed;
-					top:25px;
-					width:228px;
-				}
-			}
-
-			.affix,.affix-top {
-			   position:static;
-			}
-			
-			#map_wrapper {
-			    height: 400px;
-			}
-
-
-			#map_canvas {
-				width: 100%;
-				height: 100%;
-			}
-		</style>
-	</head>
-	<body>
-		<div class="container-fluid">
-
-			<div class="row">
-
-				<div class="col-md-2">
-					<div class="list-group affix" id="sidebar">
-					<a href="#instats" class="list-group-item">Followers/Following</a>
-					<a href="#likes" class="list-group-item">Likes/Comments</a>
-					<a href="#time" class="list-group-item">Post Time</a>
-					<a href="#filter" class="list-group-item">Filters</a>
-					<a href="#location" class="list-group-item">Locations</a>
-					<a href="#tagged" class="list-group-item">Tags</a>
-						<div class="list-group-item"> 					
-							<a href="https://twitter.com/share" class="twitter-share-button" data-text="Check my Instagrams stats here:" data-count="none">Tweet</a>
-						</div>
-					</div>
-					&nbsp;
-				</div>
-
-				<div class="col-md-10">
-				
-					<!-- INTRO -->
-					<div class="row-center">
-						<br>
-						<form action="chart" method="GET">
-							<div class="input-group input-group-lg">
-							  <input type="text" class="form-control transp" placeholder="Username" type="text" name="username"="Search">
-							  <span class="input-group-btn">
-								<button class="transp btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
-							  </span>
-							</div>
-						</form>
-						<br>
-						<br>
-						<h1 style="font-size: 50px;">InStats for {{userinput}}</h1>
-						<h2 style="font-size: 20px;">{{usererrormessage}}</h2>
-					</div>
-					
-					<!-- Followers/Following -->
-					<div class="row-center">
-						<a name="instats"></a>
-						<h2 class="chart-header">Ratio of Followers/Following is {{ratio}}{{zeroerrormsg}}</h2>
-						<canvas id="followersChart"></canvas>
-					</div>
-					
-					<hr class="chart">
-					
-					<!-- Likes -->
-					<div class="row-center">
-						<a name="likes"></a>
-						<h2 class="chart-header">Average Likes was {{avg_likes}}</h2>
-						<canvas id="likesChart"></canvas>
-						<div style="padding-top:15px;padding-bottom: 20px;">
-							Likes <i class="glyphicon glyphicon-stop" style="color:rgba(151,187,205,1);"></i> 
-							Comments <i class="glyphicon glyphicon-stop" style="color: rgba(209,38,38,1);"></i>
-						</div>
-					</div>
-					
-					<hr class="chart">
-					
-					<!-- Day/Hour Post Distribution -->
-					<div class="row-center">
-
-						<a name="time"></a>
-						<div class="col-md-6">
-							<h2 class="chart-header"><i class="glyphicon glyphicon-calendar"></i> Day Posted Distribution</h2>
-							<canvas id="dayDistChart"></canvas>
-						</div>
-
-						<div class="col-md-6">
-							<h2 class="chart-header"><i class="glyphicon glyphicon-time"></i> Hour Posted Distribution</h2>
-							<canvas id="hourDistChart"></canvas>
-						</div>
-						&nbsp;
-					</div>
-					
-					<hr class="chart">
-					
-					<!-- Filters -->
-					<div class="row-center">
-						<a name="filter"></a>
-						<h2 class="chart-header">Most Common Filters</h2>
-						<canvas id="filtersChart"></canvas>
-					</div>
-					
-					<hr class="chart">
-					
-					<!-- Locations -->
-					<div class="row-center">
-						<a name="location"></a>
-						<h2 class="chart-header">Locations</h2>
-						<div id="map_wrapper">
-							<div id="map_canvas" class="mapping"></div>
-						</div>
-					</div>
-					
-					<hr class="chart">
-					
-					<!-- Tagged -->
-					<div class="row-center">
-						<a name="tagged"></a>
-						<h2 class="chart-header">Tagged in Photos</h2>
-						<h4>{% for x in range(bffcount) %}
-							<a href="/chart?username={{nodupbff[x]}}">{{nodupbff[x]}}</a><br>
-							{% endfor %}
-						</h4>
-						<h2>there are on average {{averagetagcount}} people tagged per photo</h2>
-					</div>
-					
-				</div>
-
-			</div>
-		</div>
-		
-		<!-- Footer -->
-		<div class="navbar navbar-default navbar-fixed-bottom" style="text-align:center; background-color: white;">
-			<h2 style="font-size: 13px;">
-				<a href="https://ca.linkedin.com/pub/nikola-draca/73/78b/bab" target="blank">Niko Draca</a> | <a href="https://ca.linkedin.com/pub/nathan-dubord/a9/822/338" target="blank">Nathan Dubord</a> © 2015 |
-				<a href="MAILTO:instatsgram@gmail.com"> Contact</a>
-			</h2> 
-		</div>	
-		
-		<!--scripts loaded here-->
-		<script src="static/jquery-2.1.4.min.js"></script>
-		
-		<script>
-			var script = document.createElement('script');
-			script.src = "https://maps.googleapis.com/maps/api/js?sensor=false&callback=initialize";
-			document.body.appendChild(script);
-			
-			function initialize() {
-			    var map;
-			    var bounds = new google.maps.LatLngBounds();
-			    var style
-			    var mapOptions = {
-			        mapTypeId: 'roadmap',
-			        scrollwheel: false,
-			        styles: [{"featureType":"administrative","elementType":"labels.text.fill","stylers":[{"color":"#444444"}]},{"featureType":"landscape","elementType":"all","stylers":[{"color":"#f2f2f2"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"all","stylers":[{"saturation":-100},{"lightness":45}]},{"featureType":"road.highway","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"road.arterial","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#97BBCD"},{"visibility":"on"}]}]
-
-
-				};
-			                    
-			    // Display a map on the page
-			    map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-			    map.setTilt(45);
-			   
-				    
-			  	var latTemp = {{geolat}};
-			    var longTemp = {{geolong}};
-			    var nameTemp = {{geoname|safe}};
-		        
-			    // Display multiple markers on a map
-			    var infoWindow = new google.maps.InfoWindow(), marker, i;
-	  
-			    for(i = 0; i < nameTemp.length; i++) {
-			     	var position = new google.maps.LatLng(latTemp[i],longTemp[i]);
-			        bounds.extend(position);
-			        marker = new google.maps.Marker({
-			            position: position,
-			            map: map,
-			            title: nameTemp[i]
-			        });
-			    }
-
-				map.fitBounds(bounds);
-			    // }
-			
-			    // Override our map zoom level once our fitBounds function runs (Make sure it only runs once)
-		    	var boundsListener = google.maps.event.addListener((map), 'bounds_changed', function(event) {
-		        google.maps.event.removeListener(boundsListener);
-			    });
-			}
-		</script>
-		
-		<!-- Followers/Following Chart -->
-		<script>
-			var data = [
-				{% for item,label,colors in set %}{
-					value: {{item}},
-					label: "{{label}}",
-					color : "{{colors}}"
-				},
-				{% endfor %}
-			];
-			
-			var options = {
-				responsive: true,
-				maintainAspectRatio: true
-
-			}
-			
-			var followersChart = new Chart(document.getElementById("followersChart").getContext("2d")).Doughnut(data, options);
-		</script>
-
-		<!-- Likes/Comments Chart -->
-		<script>
-			var data = {
-				labels : [
-					{% for item in labels2 %}
-					"{{item}}",
-					{% endfor %}
-				],
-				datasets : [
-					{
-			            label: "likes",
-						fillColor: "rgba(151,187,205,0.2)",
-						strokeColor: "rgba(151,187,205,1)",
-						pointColor: "rgba(151,187,205,1)",
-						data : [
-							{% for item in values2 %}
-							{{item}},
-							{% endfor %}
-						]
-					},
-			        {
-			            label: "comments",
-						fillColor: "rgba(232,66,66,0.2)",
-						strokeColor: "rgba(209,38,38,1)",
-						pointColor: "rgba(238,98,98,1)",
-						data : [
-							{% for item in values2_1 %}
-							{{item}},
-							{% endfor %}
-						]
-			        }
-				]
-			}
-			
-			var options = {
-				responsive: true,
-			    scaleShowGridLines : false
-
-			}
-		 
-			var likesCommentsChart = new Chart(document.getElementById("likesChart").getContext("2d")).Line(data, options);
-		</script>
-
-		<!-- Time Distribution Chart Day -->
-		<script>
-			var data = {
-				labels : [
-					{% for item in labels3 %}
-					"{{item}}",
-					{% endfor %}
-				],
-				datasets: [
-					{
-						label: "Days",
-						fillColor: "rgba(232,66,66,0.2)",
-						strokeColor: "rgba(209,38,38,1)",
-						pointColor: "rgba(238,98,98,1)",
-						pointStrokeColor: "#fff",
-						pointHighlightFill: "#fff",
-						pointHighlightStroke: "rgba(220,220,220,1)",
-				 		data : [
-				 			{% for item in values3 %}
-							{{item}},
-							{% endfor %}
-						]
-					}
-				]
-			}
-			
-			var options = {
-				responsive: true
-			}
-			
-			var timeChart = new Chart(document.getElementById("dayDistChart").getContext("2d")).Radar(data, options);
-		</script>
-
-		<!-- Time Distribution Chart Hour -->
-		<script>
-			var data = {
-				labels : [
-					{% for item in labels4 %}
-					"{{item}}",
-					{% endfor %}
-				],
-				datasets: [
-					{
-					  	label: "Days",
-					  	fillColor: "rgba(78,235,89,0.2)",
-					  	strokeColor: "rgba(79,182,86,1)",
-					  	pointColor: "rgba(151,187,205,1)",
-					  	pointStrokeColor: "#fff",
-					  	pointHighlightFill: "#fff",
-					  	pointHighlightStroke: "rgba(220,220,220,1)",
-					 	data : [
-					 		{% for item in values4 %}
-							{{item}},
-							{% endfor %}
-						]
-					}
-				]
-			}
-			
-			var options = {
-				responsive: true
-			}
-			
-			var timeChart = new Chart(document.getElementById("hourDistChart").getContext("2d")).Radar(data, options);
-		</script>
-
-		<!-- Filters chart -->
-		<script>
-  			var data = {
-		   		labels : [
-		   			{% for item in labels5 %}
-		            "{{item}}",
-		            {% endfor %}
-		       	],
-		   		datasets : [
-			      	{
-			            fillColor: "#FFC870",
-			            strokeColor: "#E6B465",
-			            pointColor: "#FFC870",
-				        data : [
-				         	{% for item in values5 %}
-				            {{item}},
-				            {% endfor %}
-				        ]
-			      	}
-		      	]
-		   }
-		   
-		   	var options = {
-				responsive: true,
-				scaleShowGridLines: false
-			}
-		 
-		   var filtersChart = new Chart(document.getElementById("filtersChart").getContext("2d")).Bar(data, options);
-		</script>
-	</body>
+</body>
 </html>
+
+<script type="text/javascript">
+	
+var ctx = document.getElementById("myChart");
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: {{all_data['likes']}},
+        datasets: [{
+        	fill: false,
+        	pointRadius: 0,
+            data: {{all_data['likes']}},
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+            ],
+            borderWidth: 5
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+            	display: false,
+                ticks: {
+                    beginAtZero:false
+                }
+            }],
+	        yAxes: [{
+	        	display: false,
+                ticks: {
+                    beginAtZero:false
+                }
+            }]
+
+        }
+    }
+});
+
+</script>
