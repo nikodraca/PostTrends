@@ -41,20 +41,26 @@ var myChart = new Chart(ctx, {
     },
     options: {
         scales: {
-            yAxes: [{
+            xAxes: [{
             	display: false,
+	        	gridLines: {display: false},
                 ticks: {
                     beginAtZero:false
                 }
             }],
 	        yAxes: [{
-	        	display: false,
+	        	display: true,
+	        	gridLines: {display: false},
                 ticks: {
                     beginAtZero:false
                 }
-            }]
+            }],
 
-        }
+        },
+        legend: {
+        	display: false,
+        },
+
     }
 });
 
