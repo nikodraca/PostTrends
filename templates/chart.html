@@ -37,7 +37,20 @@ var myChart = new Chart(ctx, {
                 'rgba(255,99,132,1)',
             ],
             borderWidth: 5
-        }]
+        },
+    	{fill: false,
+        	pointRadius: 0,
+            data: {{all_data['comments']}},
+            backgroundColor: [
+                'rgba(40, 99, 100, 0.2)',
+            ],
+            borderColor: [
+                'rgba(30,99,100,1)',
+            ],
+            borderWidth: 5
+        },
+
+        ]
     },
     options: {
         scales: {
