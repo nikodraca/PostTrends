@@ -3,25 +3,95 @@
 <head>
 	<title></title>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
 </head>
+
+<style>
+
+    body, html {
+        background-color: #FAFAFA;
+    }
+
+    #sidebar {
+        background-color: white;
+        height: 100vh;
+        text-align: center;
+        padding-right: 0px;
+    }
+
+    #data {
+        padding-right: 0px;
+        padding-left: 0px;
+        text-align: center;
+
+    }
+
+    img {
+        border-radius: 50%;
+    }
+
+    .row {
+        margin-right: 0px;
+        margin-left: 0px;
+    }
+
+    canvas {
+    display: block;
+    margin: 0 auto;
+    }
+
+
+
+</style>
+
 <body>
 <!-- {{all_data['basic']}} -->
 
-{{all_data['basic']['username']}}
-{{all_data['basic']['counts']['followed_by']}}
-{{all_data['basic']['counts']['follows']}}
-{{(all_data['basic']['counts']['followed_by']/all_data['basic']['counts']['follows'])|round(2)}}
-<img src="{{all_data['basic']['profile_picture']}}">
 
-<canvas id="myChart" width="100" height="100"></canvas>
 
+<div class="row">
+    <div class="col-sm-2" id="sidebar">
+        <h5>PostTrends Dashboard</h5>
+        <br>
+        <h1>{{all_data['basic']['username']}}</h1>
+        <img src="{{all_data['basic']['profile_picture']}}">
+        <hr>
+        <h4>{{all_data['basic']['counts']['followed_by']}} followers</h4>
+        <h4>{{all_data['basic']['counts']['follows']}} following</h4>
+
+        <!-- {{(all_data['basic']['counts']['followed_by']/all_data['basic']['counts']['follows'])|round(2)}} -->
+
+    </div>
+    <div class="col-sm-10" id="data">
+
+      <div class="col-sm-5" id="data">
+            Likes <br>
+            {{ all_data['likes'] | sum() }} total likes <br>
+<br>
+
+            <canvas id="likesChart" width="300" height="100"></canvas>
+
+        </div>
+      <div class="col-sm-5" id="data">
+            Comments <br>
+            {{ all_data['comments'] | sum() }} total comments <br>
+<br>
+
+            <canvas id="commentsChart" width="300" height="100"></canvas>
+        </div>
+
+
+    </div>
+</div>
 
 </body>
 </html>
 
 <script type="text/javascript">
 	
-var ctx = document.getElementById("myChart");
+var ctx = document.getElementById("likesChart");
+
 var myChart = new Chart(ctx, {
     type: 'line',
     data: {
@@ -38,31 +108,26 @@ var myChart = new Chart(ctx, {
             ],
             borderWidth: 5
         },
-    	{fill: false,
-        	pointRadius: 0,
-            data: {{all_data['comments']}},
-            backgroundColor: [
-                'rgba(40, 99, 100, 0.2)',
-            ],
-            borderColor: [
-                'rgba(30,99,100,1)',
-            ],
-            borderWidth: 5
-        },
-
         ]
     },
     options: {
+        responsive: false,
         scales: {
             xAxes: [{
             	display: false,
 	        	gridLines: {display: false},
                 ticks: {
-                    beginAtZero:false
+                    display: false
                 }
             }],
+
 	        yAxes: [{
-	        	display: true,
+                display: false,
+                ticks: {
+                    display: false,
+                    maxTicksLimit: 5
+                },
+
 	        	gridLines: {display: false},
                 ticks: {
                     beginAtZero:false
@@ -76,5 +141,61 @@ var myChart = new Chart(ctx, {
 
     }
 });
+
+var ctx = document.getElementById("commentsChart");
+
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: {{all_data['comments']}},
+        datasets: [{
+            fill: false,
+            pointRadius: 0,
+            data: {{all_data['comments']}},
+            backgroundColor: [
+                'rgba(30, 80, 190, 0.2)',
+            ],
+            borderColor: [
+                'rgba(30,80,190,1)',
+            ],
+            borderWidth: 5
+        },
+        ]
+    },
+    options: {
+        responsive: false,
+
+        scales: {
+
+            xAxes: [{
+                display: false,
+                gridLines: {display: false},
+                ticks: {
+                    display: false
+                }
+            }],
+
+            yAxes: [{
+                display: false,
+                ticks: {
+                    display: false,
+                    maxTicksLimit: 5
+                },
+
+                gridLines: {display: false},
+                ticks: {
+                    beginAtZero:false
+                }
+            }],
+
+        },
+        legend: {
+            display: false,
+        },
+
+    }
+});
+
+
 
 </script>
