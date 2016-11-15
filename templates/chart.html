@@ -4,18 +4,25 @@
 	<title></title>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://use.fontawesome.com/bd59d293d8.js"></script>
+
 
 </head>
 
 <style>
+
+    h1, h2, h3, h4, h5 {
+        font-family: "AvenirNext-UltraLight";
+    }
 
     body, html {
         background-color: #FAFAFA;
     }
 
     #sidebar {
+                height: 100vh;
+
         background-color: white;
-        height: 100vh;
         text-align: center;
         padding-right: 0px;
     }
@@ -26,12 +33,19 @@
         text-align: center;
 
     }
+    #chart_div {
+
+                text-align: center;
+padding-top: 3%
+    }
 
     img {
         border-radius: 50%;
     }
 
     .row {
+                height: 100vh;
+
         margin-right: 0px;
         margin-left: 0px;
     }
@@ -39,6 +53,10 @@
     canvas {
     display: block;
     margin: 0 auto;
+    }
+
+    #logo, #stats {
+        padding-top: 5%;
     }
 
 
@@ -51,51 +69,56 @@
 
 
 <div class="row">
-    <div class="col-sm-2" id="sidebar">
-        <h5>PostTrends Dashboard</h5>
+    <div class="col-sm-3" id="sidebar">
+        <h4 id="logo"><i class="fa fa-product-hunt" aria-hidden="true"></i> PostTrends </h4>
         <br>
         <h1>{{all_data['basic']['username']}}</h1>
         <img src="{{all_data['basic']['profile_picture']}}">
-        <hr>
-        <h4>{{all_data['basic']['counts']['followed_by']}} followers</h4>
-        <h4>{{all_data['basic']['counts']['follows']}} following</h4>
-
-        <!-- {{(all_data['basic']['counts']['followed_by']/all_data['basic']['counts']['follows'])|round(2)}} -->
-
+        <h4 id="stats">{{all_data['basic']['counts']['followed_by']}} followers</h4>
+        <h4 id="stats">{{all_data['basic']['counts']['follows']}} following</h4>
     </div>
-    <div class="col-sm-10" id="data">
 
-      <div class="col-sm-5" id="data">
-            Likes <br>
-            {{ all_data['likes'] | sum() }} total likes <br>
-<br>
+<div class="col-sm-8" id="data">
 
-            <canvas id="likesChart" width="300" height="100"></canvas>
-
-        </div>
-      <div class="col-sm-5" id="data">
-            Comments <br>
-            {{ all_data['comments'] | sum() }} total comments <br>
-<br>
-
-            <canvas id="commentsChart" width="300" height="100"></canvas>
-        </div>
-
-
+    <div class="col-sm-6" id="chart_div">
+        <h4> <i class="fa fa-heart" aria-hidden="true"></i> {{ all_data['likes'] | sum() }} Likes </h4>
+        <br>        
+        <canvas id="likesChart" width="300" height="170"></canvas>
     </div>
+    <div class="col-sm-6" id="chart_div">
+        <h4> <i class="fa fa-comment" aria-hidden="true"></i> {{ all_data['comments'] | sum() }} Comments </h4>
+        <br>        
+        <canvas id="commentsChart" width="300" height="170"></canvas>
+    </div>
+</div>
+
 </div>
 
 </body>
 </html>
 
 <script type="text/javascript">
-	
+
+var newOldArr = new Array();
+newOldArr.push("Past");
+
+for (var i = 0; i < {{all_data['likes']}}.length; i++) {
+    newOldArr.push("");
+};
+
+newOldArr.push("Recent");
+
+for (var i = 0; i < newOldArr.length; i++) {
+    console.log(newOldArr[i]);
+};
+
+
 var ctx = document.getElementById("likesChart");
 
 var myChart = new Chart(ctx, {
     type: 'line',
     data: {
-        labels: {{all_data['likes']}},
+        labels: newOldArr,
         datasets: [{
         	fill: false,
         	pointRadius: 0,
@@ -104,9 +127,9 @@ var myChart = new Chart(ctx, {
                 'rgba(255, 99, 132, 0.2)',
             ],
             borderColor: [
-                'rgba(255,99,132,1)',
+                '#DA627D',
             ],
-            borderWidth: 5
+            borderWidth: 3
         },
         ]
     },
@@ -114,10 +137,10 @@ var myChart = new Chart(ctx, {
         responsive: false,
         scales: {
             xAxes: [{
-            	display: false,
+            	display: true,
 	        	gridLines: {display: false},
                 ticks: {
-                    display: false
+                    display: true
                 }
             }],
 
@@ -147,7 +170,7 @@ var ctx = document.getElementById("commentsChart");
 var myChart = new Chart(ctx, {
     type: 'line',
     data: {
-        labels: {{all_data['comments']}},
+        labels: newOldArr,
         datasets: [{
             fill: false,
             pointRadius: 0,
@@ -156,9 +179,9 @@ var myChart = new Chart(ctx, {
                 'rgba(30, 80, 190, 0.2)',
             ],
             borderColor: [
-                'rgba(30,80,190,1)',
+                '#5AB1BB',
             ],
-            borderWidth: 5
+            borderWidth: 3
         },
         ]
     },
@@ -168,10 +191,10 @@ var myChart = new Chart(ctx, {
         scales: {
 
             xAxes: [{
-                display: false,
+                display: true,
                 gridLines: {display: false},
                 ticks: {
-                    display: false
+                    display: true
                 }
             }],
 
@@ -195,7 +218,6 @@ var myChart = new Chart(ctx, {
 
     }
 });
-
 
 
 </script>

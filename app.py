@@ -60,14 +60,17 @@ def get_data(user_input):
 
 	all_data = {}
 	all_data['basic'] = user_info
-	all_data['likes'] = likes 
-	all_data['comments'] = comments
+	all_data['likes'] = list(reversed(likes)) 
+	all_data['comments'] = list(reversed(comments))
 	all_data['days'] = dict(Counter(days))
 	all_data['hours'] = dict(Counter(hours))
 	all_data['filters'] = dict(Counter(filters))
 	all_data['locations'] = locations
 	all_data['tags'] = tags
 	all_data['tag_positions'] = tag_positions
+
+	# print list(reversed(likes)) 
+	# print list(reversed(comments))
 
 	# return json.dumps(all_data['likes'])
 
