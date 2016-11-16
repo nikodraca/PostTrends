@@ -55,7 +55,7 @@ padding-top: 3%
     margin: 0 auto;
     }
 
-    #logo, #stats {
+    #logo, #stats-fs, #stats-fg {
         padding-top: 5%;
     }
 
@@ -74,21 +74,22 @@ padding-top: 3%
         <br>
         <h1>{{all_data['basic']['username']}}</h1>
         <img src="{{all_data['basic']['profile_picture']}}">
-        <h4 id="stats">{{all_data['basic']['counts']['followed_by']}} followers</h4>
-        <h4 id="stats">{{all_data['basic']['counts']['follows']}} following</h4>
+        <h4 id="stats-fs">{{all_data['basic']['counts']['followed_by']}} followers</h4>
+        <h4 id="stats-fg">{{all_data['basic']['counts']['follows']}} following</h4>
+
     </div>
 
-<div class="col-sm-8" id="data">
-
-    <div class="col-sm-6" id="chart_div">
+<div class="col-sm-9" id="data">
+<h3>Summary (past 20 posts)</h3>
+    <div class="col-sm-6" id="chart_div" >
         <h4> <i class="fa fa-heart" aria-hidden="true"></i> {{ all_data['likes'] | sum() }} Likes </h4>
         <br>        
-        <canvas id="likesChart" width="300" height="170"></canvas>
+        <canvas id="likesChart" width="350" height="200"></canvas>
     </div>
-    <div class="col-sm-6" id="chart_div">
+    <div class="col-sm-6" id="chart_div" >
         <h4> <i class="fa fa-comment" aria-hidden="true"></i> {{ all_data['comments'] | sum() }} Comments </h4>
         <br>        
-        <canvas id="commentsChart" width="300" height="170"></canvas>
+        <canvas id="commentsChart" width="350" height="200"></canvas>
     </div>
 </div>
 
@@ -99,6 +100,7 @@ padding-top: 3%
 
 <script type="text/javascript">
 
+
 var newOldArr = new Array();
 newOldArr.push("Past");
 
@@ -108,10 +110,7 @@ for (var i = 0; i < {{all_data['likes']}}.length; i++) {
 
 newOldArr.push("Recent");
 
-for (var i = 0; i < newOldArr.length; i++) {
-    console.log(newOldArr[i]);
-};
-
+// <---- Likes trend ---->
 
 var ctx = document.getElementById("likesChart");
 
@@ -145,7 +144,7 @@ var myChart = new Chart(ctx, {
             }],
 
 	        yAxes: [{
-                display: false,
+                display: true,
                 ticks: {
                     display: false,
                     maxTicksLimit: 5
@@ -164,6 +163,9 @@ var myChart = new Chart(ctx, {
 
     }
 });
+// <---- End likes trend ---->
+
+// <---- Comments trend ---->
 
 var ctx = document.getElementById("commentsChart");
 
@@ -187,9 +189,7 @@ var myChart = new Chart(ctx, {
     },
     options: {
         responsive: false,
-
         scales: {
-
             xAxes: [{
                 display: true,
                 gridLines: {display: false},
@@ -199,7 +199,7 @@ var myChart = new Chart(ctx, {
             }],
 
             yAxes: [{
-                display: false,
+                display: true,
                 ticks: {
                     display: false,
                     maxTicksLimit: 5
@@ -210,14 +210,13 @@ var myChart = new Chart(ctx, {
                     beginAtZero:false
                 }
             }],
-
         },
         legend: {
             display: false,
         },
-
     }
 });
+
 
 
 </script>
