@@ -6,7 +6,6 @@ import math
 import datetime
 import creds
 from collections import Counter
-import difflib
 
 app = Flask(__name__)
 
@@ -73,12 +72,30 @@ def get_data(user_input):
 		except (KeyError, TypeError, IndexError) as e:
 			pass
 
+
+	# AMATEUR HOUR AHEAD
+
+	days_pos = [["Mon", 0],["Tue", 0],["Wed", 0],["Thu", 0],["Fri", 0],["Sat", 0],["Sun", 0]]
+
+	for i in range(0, len(days)):
+		for j in range(0, len(days_pos)):
+			if days[i] in days_pos[j][0]:
+				days_pos[j][1] = days_pos[j][1] + 1
+
+
+	hours_pos = [["00",0],["01",0],["02",0],["03",0],["04",0],["05",0],["06",0],["07",0],["08",0],["09",0],["10",0],["11",0],["12",0],["13",0],["14",0],["15",0],["16",0],["17",0],["18",0],["19",0],["20",0],["21",0],["22",0],["23",0]]
+
+	for i in range(0, len(hours)):
+		for j in range(0, len(hours_pos)):
+			if hours[i] in hours_pos[j][0]:
+				hours_pos[j][1] = hours_pos[j][1] + 1
+
 	all_data = {}
 	all_data['basic'] = user_info
 	all_data['likes'] = list(reversed(likes)) 
 	all_data['comments'] = list(reversed(comments))
-	all_data['days'] = dict(Counter(days))
-	all_data['hours'] = dict(Counter(hours))
+	all_data['days'] = days_pos
+	all_data['hours'] = hours_pos
 	all_data['filters'] = dict(Counter(filters))
 	all_data['locations'] = locations
 	all_data['tags'] = tags

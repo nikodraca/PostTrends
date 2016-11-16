@@ -20,10 +20,11 @@
     }
 
     #sidebar {
-                height: 100vh;
-
+        height: 100vh;
         background-color: white;
         text-align: center;
+        position: fixed;
+        top: 0;
         padding-right: 0px;
     }
 
@@ -31,12 +32,20 @@
         padding-right: 0px;
         padding-left: 0px;
         text-align: center;
+		top: 0;
+		bottom: 0;
+		right:0;
+		position:fixed;
+		overflow-y:scroll;
+		overflow-x:hidden;
 
     }
     #chart_div {
 
-                text-align: center;
-padding-top: 3%
+		text-align: center;
+		padding-top: 3%;
+		padding-bottom: 3%;
+
     }
 
     img {
@@ -44,20 +53,23 @@ padding-top: 3%
     }
 
     .row {
-                height: 100vh;
-
+        height: 100vh;
         margin-right: 0px;
         margin-left: 0px;
     }
 
     canvas {
-    display: block;
-    margin: 0 auto;
+	    display: block;
+	    margin: 0 auto;
     }
 
     #logo, #stats-fs, #stats-fg {
         padding-top: 5%;
     }
+     #header {
+     	/*padding-top: 3%;*/
+
+     }
 
 
 
@@ -80,7 +92,8 @@ padding-top: 3%
     </div>
 
 <div class="col-sm-9" id="data">
-<h3>Summary (past 20 posts)</h3>
+<h3 id="header">Summary (past 20 posts)</h3>
+<hr>
     <div class="col-sm-6" id="chart_div" >
         <h4> <i class="fa fa-heart" aria-hidden="true"></i> {{ all_data['likes'] | sum() }} Likes </h4>
         <br>        
@@ -91,6 +104,18 @@ padding-top: 3%
         <br>        
         <canvas id="commentsChart" width="350" height="200"></canvas>
     </div>
+    <div class="col-sm-6" id="chart_div" >
+        <h4> <i class="fa fa-calendar" aria-hidden="true"></i> Days Posted</h4>
+        <br>        
+        <canvas id="daysRadar" width="350" height="200"></canvas>
+    </div>
+	<div class="col-sm-6" id="chart_div" >
+        <h4> <i class="fa fa-clock-o" aria-hidden="true"></i> Hours Posted</h4>
+        <br>        
+        <canvas id="hoursRadar" width="350" height="200"></canvas>
+    </div>
+
+
 </div>
 
 </div>
@@ -216,7 +241,104 @@ var myChart = new Chart(ctx, {
         },
     }
 });
+// <---- End Comments trend ---->
+
+// <---- Days ---->
+
+var ctx = document.getElementById("daysRadar");
+
+var dayLabel = {{all_data['days']|safe}}.map(function(tuple) {
+    return tuple[0];
+});
+var dayValue = {{all_data['days']|safe}}.map(function(tuple) {
+    return tuple[1];
+});
+
+var data = {
+    labels: dayLabel,
+    datasets: [
+        {
+            backgroundColor: "#5FBB97",
+        	pointRadius: 0,
+            borderColor: "#5FBB97",
+            pointBackgroundColor: "rgba(179,181,198,1)",
+            pointBorderColor: "#fff",
+            pointHoverBackgroundColor: "#fff",
+            pointHoverBorderColor: "rgba(179,181,198,1)",
+            data: dayValue
+        }
+    ]
+};
+
+var myRadarChart = new Chart(ctx, {
+    type: 'radar',
+    data: data,
+    options: {
+	        responsive: false,
+
+        legend: {
+            display: false,
+        },
+        scale: {
+            gridLines: {display: false},
+            ticks: {
+                display: false
+            }
+        }
 
 
+    }
+});
 
+// <---- Days end ---->
+
+
+// <---- Hours ---->
+
+var ctx = document.getElementById("hoursRadar");
+
+var hourLabel = {{all_data['hours']|safe}}.map(function(tuple) {
+    return tuple[0];
+});
+var hourValue = {{all_data['hours']|safe}}.map(function(tuple) {
+    return tuple[1];
+});
+
+var data = {
+    labels: hourLabel,
+    datasets: [
+        {
+            backgroundColor: "#FE938C",
+        	pointRadius: 0,
+            borderColor: "#FE938C",
+            pointBackgroundColor: "rgba(179,181,198,1)",
+            pointBorderColor: "#fff",
+            pointHoverBackgroundColor: "#fff",
+            pointHoverBorderColor: "rgba(179,181,198,1)",
+            data: hourValue
+        }
+    ]
+};
+
+var myRadarChart = new Chart(ctx, {
+    type: 'radar',
+    data: data,
+    options: {
+	        responsive: false,
+
+        legend: {
+            display: false,
+        },
+        scale: {
+            gridLines: {display: false},
+            ticks: {
+                display: false
+            }
+        }
+
+
+    }
+});
+
+// <---- Days end ---->
 </script>
