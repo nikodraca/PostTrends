@@ -1,54 +1,119 @@
 <!DOCTYPE html>
 <html>
-<head> 
-  <title>InStats</title>
-  <link rel="stylesheet" href="static/bootstrap-3.3.5-dist/css/bootstrap.min.css">  
+<head>
+  <title>PostTrends | Simple Instagram Analytics</title>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://use.fontawesome.com/bd59d293d8.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lato:300" rel="stylesheet">
+
+
 </head>
-<body style="text-align: center;">
 
-<div class="container">
+<style>
 
-<h1>Welcome to InStats!</h1>
-<hr>
-<br>
-<br>
-<h2>InStats is an analytics platform for Instagram</h2>
-<br>
-<br>
-<br>
-<br>
+    h1, h2, h3, h4, h5 {
+      font-family: 'Lato', sans-serif;
+    }
 
-<br>
-<div class="row-center" style="padding-left: 25%; padding-right: 25%;">
-<!--   <div class="col-lg-6">
- -->    <form action="chart" method="GET">
-      <div class="input-group">
-        <span class="input-group-addon" id="basic-addon1">@</span>
-        <input type="text" class="form-control" placeholder="Username" type="text" name="username">
-        <span class="input-group-btn">
-        <button class="btn btn-default" type="submit">Search</button>
-        </span>
-      </div>
-    </form>
-  </div>
-<h5>Check out some examples: <a href="/chart?username=heemsworth">Ryan Hemsworth</a>, <a href="/chart?username=nrml">NRML</a>, <a href="/chart?username=boilerroomtv">Boiler Room</a></h5>
-<br>
-<br>
-<br>
-<br>
-<h4>Check us out on <a href="https://github.com/nikodraca/InStats">GitHub</a> </h4>
-<h4>Drop us a line <a href="MAILTO:admin@songtrast.com">here</a></h4>
-<br>
+    body, html {
+        background-color: #FAFAFA;
+    }
 
+    #sidebar {
+        height: 100vh;
+        background-color: white;
+        text-align: center;
+        position: fixed;
+        top: 0;
+        padding-right: 0px;
+    }
+
+    #data {
+        padding-right: 0px;
+        padding-left: 0px;
+        text-align: center;
+        top: 0;
+        bottom: 0;
+        right:0;
+        position:fixed;
+        overflow-y:scroll;
+        overflow-x:hidden;
+
+    }
+    #chart_div {
+
+    text-align: center;
+    padding-top: 3%;
+    padding-bottom: 5%;
+
+    }
+
+    img {
+        border-radius: 50%;
+    }
+
+    .row {
+        height: 100vh;
+        margin-right: 0px;
+        margin-left: 0px;
+        text-align: center;
+    }
+
+    canvas {
+      display: block;
+      margin: 0 auto;
+    }
+
+    #logo, #stats-fs, #stats-fg {
+        padding-top: 5%;
+    }
+     #header {
+      /*padding-top: 3%;*/
+
+     }
+
+     .form-control {
+        width: 60%;
+        display: inline-block;
+        text-align: center;
+     }
+
+     #header {
+      padding-top: 5%;
+      padding-bottom: 2%;
+     }
+
+</style>
+
+<body>
+
+<div class="row">
+    <div class="col-sm-12" id='header'>
+
+<h1 id="logo"><i class="fa fa-product-hunt" aria-hidden="true"></i> PostTrends </h1>
+<h4>Instagram analytics for everyone</h4>
+</div>
+    <div class="col-sm-12">
+
+<form type="submit" onsubmit="showSnapshot(); return false;" id="form">
+
+<input type="text" class="form-control" align="center" id="input_value" placeholder="Instagram username"><br>
+
+</form>
 
 </div>
-
-<div class="navbar navbar-fixed-bottom" style="text-align:center;">
-<hr>
-<h2 style="font-size: 10px;">
- nikola draca, 2015
- </h2> 
 </div>
 
 </body>
+
+<script type="text/javascript">
+  
+  function showSnapshot() {
+    window.location.href = "/u/" + document.getElementById('input_value').value;
+}
+
+</script>
+
+
 </html>

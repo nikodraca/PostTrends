@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
+	<title>PostTrends | {{all_data['basic']['username']}}</title>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="https://use.fontawesome.com/bd59d293d8.js"></script>
+	<link href="https://fonts.googleapis.com/css?family=Lato:300" rel="stylesheet">
 
 
 </head>
@@ -12,7 +13,7 @@
 <style>
 
     h1, h2, h3, h4, h5 {
-        font-family: "AvenirNext-UltraLight";
+		font-family: 'Lato', sans-serif;
     }
 
     body, html {
@@ -71,6 +72,14 @@
 
      }
 
+  .form-control {
+		width: 60%;
+		display: inline-block;;
+		text-align: center;
+
+     }
+
+
 
 
 </style>
@@ -88,6 +97,15 @@
         <img src="{{all_data['basic']['profile_picture']}}">
         <h4 id="stats-fs">{{'{0:,}'.format(all_data['basic']['counts']['followed_by'])}} followers</h4>
         <h4 id="stats-fs">{{'{0:,}'.format(all_data['basic']['counts']['follows'])}} following</h4>
+        <br>
+        <hr>
+
+<form type="submit" onsubmit="showSnapshot(); return false;" id="form">
+
+<h4>Search</h4>
+<input type="text" class="form-control" align="center" id="input_value" placeholder="Username"><br>
+
+</form>
 
     </div>
 
@@ -132,6 +150,14 @@
 
 </body>
 </html>
+
+<script type="text/javascript">
+  
+  function showSnapshot() {
+    window.location.href = "/u/" + document.getElementById('input_value').value;
+}
+
+</script>
 
 <script type="text/javascript">
 

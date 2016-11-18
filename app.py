@@ -11,9 +11,9 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-	return "home page"
+	return render_template('index.html')
 
-@app.route('/u/<user_input>')
+@app.route('/u/<user_input>', methods=['GET'])
 def get_data(user_input):
 	# Username -> id
 	user = requests.get("https://api.instagram.com/v1/users/search?q=%s&access_token=%s" % (user_input, creds.ACCESS_TOKEN))
