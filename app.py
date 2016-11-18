@@ -54,9 +54,15 @@ def get_data(user_input):
 	locations = []
 	tags = []
 	tag_positions = []
+	date_range = []
 
+	# Add date range
+	date_range.append(datetime.datetime.fromtimestamp(int(media_request.json()['data'][0]['created_time'])).strftime('%b %e/%y'))
+	date_range.append(datetime.datetime.fromtimestamp(int(media_request.json()['data'][len(media_request.json()['data'])-1]['created_time'])).strftime('%b %e/%y'))
+
+	print len(media_request.json()['data'])
 	# Loop and get relevant data
-	for i in range(0, 20):
+	for i in range(0, len(media_request.json()['data'])):
 		try:
 			likes.append(media_request.json()['data'][i]['likes']['count'])
 			comments.append(media_request.json()['data'][i]['comments']['count'])
@@ -90,16 +96,24 @@ def get_data(user_input):
 			if hours[i] in hours_pos[j][0]:
 				hours_pos[j][1] = hours_pos[j][1] + 1
 
+
+	filters_arr = []
+
+	for key, value in dict(Counter(filters)).iteritems():
+		temp = [str(key),value]
+		filters_arr.append(temp)
+
 	all_data = {}
 	all_data['basic'] = user_info
 	all_data['likes'] = list(reversed(likes)) 
 	all_data['comments'] = list(reversed(comments))
 	all_data['days'] = days_pos
 	all_data['hours'] = hours_pos
-	all_data['filters'] = dict(Counter(filters))
+	all_data['filters'] = filters_arr
 	all_data['locations'] = locations
 	all_data['tags'] = tags
 	all_data['tag_positions'] = tag_positions
+	all_data['date_range'] = date_range
 
 	return render_template('chart.html', all_data=all_data)
 

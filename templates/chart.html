@@ -44,7 +44,7 @@
 
 		text-align: center;
 		padding-top: 3%;
-		padding-bottom: 3%;
+		padding-bottom: 5%;
 
     }
 
@@ -92,7 +92,7 @@
     </div>
 
 <div class="col-sm-9" id="data">
-<h3 id="header">Summary (past 20 posts)</h3>
+<h3 id="header">Snapshot</h3>
 <hr>
     <div class="col-sm-6" id="chart_div" >
         <h4> <i class="fa fa-heart" aria-hidden="true"></i> {{ all_data['likes'] | sum() }} Likes </h4>
@@ -114,6 +114,16 @@
         <br>        
         <canvas id="hoursRadar" width="350" height="200"></canvas>
     </div>
+    <div class="col-sm-6" id="chart_div" >
+        <h4> <i class="fa fa-filter" aria-hidden="true"></i> Filters</h4>
+        <br>        
+        <canvas id="filtersBar" width="350" height="200"></canvas>
+    </div>
+	<div class="col-sm-6" id="chart_div" >
+        <h4> <i class="fa fa-adjust" aria-hidden="true"></i> Follow Ratio</h4>
+        <br>        
+        <canvas id="followRatio" width="350" height="200"></canvas>
+    </div>
 
 
 </div>
@@ -127,13 +137,13 @@
 
 
 var newOldArr = new Array();
-newOldArr.push("Past");
+newOldArr.push("{{all_data['date_range'][1]}}");
 
 for (var i = 0; i < {{all_data['likes']}}.length; i++) {
     newOldArr.push("");
 };
 
-newOldArr.push("Recent");
+newOldArr.push("{{all_data['date_range'][0]}}");
 
 // <---- Likes trend ---->
 
@@ -151,7 +161,7 @@ var myChart = new Chart(ctx, {
                 'rgba(255, 99, 132, 0.2)',
             ],
             borderColor: [
-                '#DA627D',
+                '#DA627D',        
             ],
             borderWidth: 3
         },
@@ -339,6 +349,83 @@ var myRadarChart = new Chart(ctx, {
 
     }
 });
+
+
+var ctx = document.getElementById("filtersBar");
+
+var hourLabel = {{all_data['filters']|safe}}.map(function(tuple) {
+    return tuple[0];
+});
+var hourValue = {{all_data['filters']|safe}}.map(function(tuple) {
+    return tuple[1];
+});
+
+var data = {
+    labels: hourLabel,
+    datasets: [
+        {
+            backgroundColor: "#918EF4",
+            hoverBackgroundColor: "#918EF4",
+            borderWidth: 0,
+            data: hourValue
+        }
+    ]
+};
+
+var myBarChart = new Chart(ctx, {
+    type: 'bar',
+    data: data,
+    options: {
+        responsive: false,
+        legend: {
+            display: false,
+        },
+        scales: {
+		    xAxes: [{
+		                gridLines: {
+		                    display:false
+		                }
+		            }],
+		    yAxes: [{
+		                gridLines: {
+		                    display:false
+		                },
+		                ticks: {
+		              		display: false
+		                }   
+		            }]
+        }
+    }
+});
+
+
+
+var ctx = document.getElementById("followRatio");
+
+var data = {
+	labels: ['Followers', 'Following'],
+    datasets: [
+        {
+            backgroundColor: ['#DA627D','#5AB1BB'],
+            hoverBackgroundColor: ['#DA627D','#5AB1BB'],
+            data: [{{all_data['basic']['counts']['followed_by']}}, {{all_data['basic']['counts']['follows']}}],
+            borderWidth: 2,
+        }
+    ]
+};
+
+var myDoughnut = new Chart(ctx, {
+    type: 'doughnut',
+    data: data,
+    options: {
+    	cutoutPercentage: 70,	
+        responsive: false,
+        legend: {
+            display: false,
+        },
+    }
+});
+
 
 // <---- Days end ---->
 </script>
