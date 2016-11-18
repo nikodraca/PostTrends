@@ -79,7 +79,10 @@
 
      }
 
-
+	#home-page  {
+		text-decoration: none;
+		color: black;
+	}
 
 
 </style>
@@ -91,7 +94,7 @@
 
 <div class="row">
     <div class="col-sm-3" id="sidebar">
-        <h4 id="logo"><i class="fa fa-product-hunt" aria-hidden="true"></i> PostTrends </h4>
+        <a href="/" id="home-page"><h4 id="logo"><i class="fa fa-pie-chart" aria-hidden="true"></i> PostTrends </h4></a>
         <br>
         <h1>{{all_data['basic']['username']}}</h1>
         <img src="{{all_data['basic']['profile_picture']}}">
