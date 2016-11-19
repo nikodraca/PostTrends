@@ -122,7 +122,7 @@ def closest_match(obj, match):
 	res = None
 
 	for i in range(0,len(obj)):
-		if obj[i]['username'] == match:
+		if obj[i]['username'] == match.lower():
 			res = obj[i]['id']
 			break
 

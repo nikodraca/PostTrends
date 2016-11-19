@@ -141,7 +141,14 @@
         <canvas id="filtersBar" width="350" height="200"></canvas>
     </div>
 	<div class="col-sm-6" id="chart_div" >
-        <h4> <i class="fa fa-adjust" aria-hidden="true"></i> Follow Ratio</h4>
+        <h4> <i class="fa fa-adjust" aria-hidden="true"></i> 
+            {% if all_data['basic']['counts']['follows'] == 0%}
+                Infinite Follow Ratio
+            {% else %}
+                {{(all_data['basic']['counts']['followed_by']/all_data['basic']['counts']['follows'])|round(1)}}
+             Follow Ratio
+             {% endif %}
+         </h4>
         <br>        
         <canvas id="followRatio" width="350" height="200"></canvas>
     </div>
