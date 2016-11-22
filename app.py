@@ -72,7 +72,7 @@ def get_data(user_input):
 			locations.append([media_request.json()['data'][i]['location']['latitude'], media_request.json()['data'][i]['location']['longitude']])		
 			
 			for x in range(0, len(media_request.json()['data'][i]['users_in_photo'])):
-				tags.append([media_request.json()['data'][i]['users_in_photo'][x]['user']['username'], media_request.json()['data'][i]['users_in_photo'][x]['user']['id']])
+				tags.append(media_request.json()['data'][i]['users_in_photo'][x]['user']['username'])
 				tag_positions.append([media_request.json()['data'][i]['users_in_photo'][x]['position']['x'], media_request.json()['data'][i]['users_in_photo'][x]['position']['y']])
 		
 		except (KeyError, TypeError, IndexError) as e:
@@ -111,7 +111,7 @@ def get_data(user_input):
 	all_data['hours'] = hours_pos
 	all_data['filters'] = filters_arr
 	all_data['locations'] = locations
-	all_data['tags'] = tags
+	all_data['tags'] = set(tags)
 	all_data['tag_positions'] = tag_positions
 	all_data['date_range'] = date_range
 

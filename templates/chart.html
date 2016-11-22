@@ -2,9 +2,11 @@
 <html>
 <head>
 	<title>PostTrends | {{all_data['basic']['username']}}</title>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/posttrends.js') }}"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="https://use.fontawesome.com/bd59d293d8.js"></script>
+
 	<link href="https://fonts.googleapis.com/css?family=Lato:300" rel="stylesheet">
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -162,6 +164,16 @@
         <canvas id="followRatio" width="350" height="200"></canvas>
     </div>
 
+    <div class="col-sm-12" style="padding-bottom: 5%;">
+    <h4> <i class="fa fa-users" aria-hidden="true"></i> Tagged Users</h4>
+    <br>
+        {% for x in all_data['tags'] %}
+            <div class="col-sm-4">
+                <a href="#" onclick="showSnapshot('{{ x }}');">{{ x }}</a>
+            </div>
+        {% endfor %}
+    </div>
+
 
 </div>
 
@@ -169,14 +181,6 @@
 
 </body>
 </html>
-
-<script type="text/javascript">
-  
-  function showSnapshot() {
-    window.location.href = "/u/" + document.getElementById('input_value').value;
-}
-
-</script>
 
 <script type="text/javascript">
 
