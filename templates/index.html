@@ -4,19 +4,26 @@
   <title>PostTrends | Simple Instagram Analytics</title>
   <script type="text/javascript" src="{{ url_for('static', filename='js/posttrends.js') }}"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <script src="https://use.fontawesome.com/bd59d293d8.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Lato:300" rel="stylesheet">
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
 
-      ga('create', 'UA-68367110-2', 'auto');
-      ga('send', 'pageview');
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
-    </script>
+  <script src="https://use.fontawesome.com/bd59d293d8.js"></script>
+
+  <link href="https://fonts.googleapis.com/css?family=Lato:300" rel="stylesheet">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-68367110-2', 'auto');
+    ga('send', 'pageview');
+
+  </script>
 
 </head>
 
@@ -98,19 +105,29 @@
 
 <body>
 
-<div class="row">
+  <div class="row">
     <div class="col-sm-12" id='header'>
 
-<h1 id="logo"><i class="fa fa-pie-chart" aria-hidden="true"></i> PostTrends </h1>
-<h4>Instagram analytics for everyone</h4>
-</div>
-    <div class="col-sm-12">
+      <h1 id="logo"><i class="fa fa-pie-chart" aria-hidden="true"></i> PostTrends </h1>
+      <h4>Instagram analytics for everyone</h4>
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert alert-danger fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Whoops!</strong> {{messages[0]}}.
+          </div>
+        {% endif %}
+      {% endwith %}
 
-<form type="submit" onsubmit="showSnapshot(); return false;" id="form">
+    </div>
+  <div class="col-sm-12">
 
-<input type="text" class="form-control" align="center" id="input_value" placeholder="Instagram username"><br>
+  <form type="submit" onsubmit="showSnapshot(); return false;" id="form">
 
-</form>
+    <input type="text" class="form-control" align="center" id="input_value" placeholder="Instagram username">
+    <br>
+
+  </form>
 
 </div>
 </div>

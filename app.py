@@ -1,4 +1,4 @@
-from flask import Flask, Markup, request, render_template, redirect
+from flask import Flask, Markup, request, render_template, redirect, url_for, flash
 import requests
 import json 
 import time
@@ -8,6 +8,7 @@ import creds
 from collections import Counter
 
 app = Flask(__name__)
+app.secret_key = creds.ACCESS_TOKEN
 
 @app.route('/')
 def home():
@@ -19,13 +20,14 @@ def get_data(user_input):
 	user = requests.get("https://api.instagram.com/v1/users/search?q=%s&access_token=%s" % (user_input, creds.ACCESS_TOKEN))
 
 	if not (user.json()['data']):
-		print "ok"
-		return "Error loading profile. Make sure profile is public and exists."
+		flash("Error loading profile. Make sure profile is public and exists.")		
+		return redirect(url_for("home"))
 	else:
 		user_id = closest_match(user.json()['data'], user_input)
 
 	if not user_id:
-		return "Error. No match"
+		flash("Error loading profile. Make sure profile is public and exists.")		
+		return redirect(url_for("home"))
 
 
 	# Make request for user info
@@ -33,14 +35,16 @@ def get_data(user_input):
 	user_request = requests.get("https://api.instagram.com/v1/users/%s/?access_token=%s" % (user_id, creds.ACCESS_TOKEN))
 	
 	if user_request.json()['meta']['code'] == 400:
-		return "Error loading profile. Make sure profile is public and exists."
+		flash("Error loading profile. Make sure profile is public and exists.")		
+		return redirect(url_for("home"))
 
 	# Get user info as dict, used to populate
 	user_info = user_request.json()['data']
 
 	# Get media data for last 20 posts
 	if user_request.json()['data']['counts']['media'] == 0:
-		return "Error. No media."
+		flash("Error. User has no media.")		
+		return redirect(url_for("home"))
 
 	media_request = requests.get("https://api.instagram.com/v1/users/%s/media/recent/?access_token=%s&count=20" % (user_id, creds.ACCESS_TOKEN))
 
