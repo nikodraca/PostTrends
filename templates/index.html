@@ -101,6 +101,11 @@
       padding-bottom: 2%;
      }
 
+     sup {
+      font-size: 14px;
+      top: -2.0em;
+     }
+
 </style>
 
 <body>
@@ -108,7 +113,7 @@
   <div class="row">
     <div class="col-sm-12" id='header'>
 
-      <h1 id="logo"><i class="fa fa-pie-chart" aria-hidden="true"></i> PostTrends </h1>
+      <h1 id="logo"><i class="fa fa-pie-chart" aria-hidden="true"></i> PostTrends <sup>BETA</sup></h1>
       <h4>Instagram analytics for everyone</h4>
       {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -125,6 +130,7 @@
   <form type="submit" onsubmit="showSnapshot(); return false;" id="form">
 
     <input type="text" class="form-control" align="center" id="input_value" placeholder="Instagram username">
+
     <br>
 
   </form>
