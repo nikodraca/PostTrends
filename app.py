@@ -46,7 +46,7 @@ def get_data(user_input):
 		flash("Error. User has no media.")		
 		return redirect(url_for("home"))
 
-	media_request = requests.get("https://api.instagram.com/v1/users/%s/media/recent/?access_token=%s&count=20" % (user_id, creds.ACCESS_TOKEN))
+	media_request = requests.get("https://api.instagram.com/v1/users/%s/media/recent/?access_token=%s&count=33" % (user_id, creds.ACCESS_TOKEN))
 
 	# return json.dumps(media_request.json()['data'])
 
