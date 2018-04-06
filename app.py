@@ -1,11 +1,19 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from flask import Flask, Markup, request, render_template, redirect, url_for, flash
 import requests
+from fake_useragent import UserAgent
+from bs4 import BeautifulSoup
 import json 
 import time
 import math
 import datetime
 import creds
-from collections import Counter
+import sys
+
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 app = Flask(__name__)
 app.secret_key = creds.ACCESS_TOKEN
@@ -16,121 +24,68 @@ def home():
 
 @app.route('/u/<user_input>', methods=['GET'])
 def get_data(user_input):
-	# Username -> id
-	user = requests.get("https://api.instagram.com/v1/users/search?q=%s&access_token=%s" % (user_input, creds.ACCESS_TOKEN))
 
-	if not (user.json()['data']):
-		flash("Error loading profile. Make sure profile is public and exists.")		
-		return redirect(url_for("home"))
-	else:
-		user_id = closest_match(user.json()['data'], user_input)
+	# fake user agent
+	ua = UserAgent()
+	header = {'User-Agent':str(ua.random)}
 
-	if not user_id:
-		flash("Error loading profile. Make sure profile is public and exists.")		
-		return redirect(url_for("home"))
+	# make requests
+	user_request = requests.get("https://www.instagram.com/{}/".format(user_input.lower()), headers=header)
+	user_soup = BeautifulSoup(user_request.text, 'html.parser')
 
+	# case for incorrect username
+	if len(user_soup.findAll('div', attrs={'class':'error-container'})) > 0:
+		missingDataError("user does not exist.")
 
-	# Make request for user info
+	# find json in page
+	for src in user_soup.findAll('script'):
+		if "window._sharedData" in src.text: 
+			raw_json_src = src.text.replace("window._sharedData = ", "")[:-1]
 
-	user_request = requests.get("https://api.instagram.com/v1/users/%s/?access_token=%s" % (user_id, creds.ACCESS_TOKEN))
-	
-	if user_request.json()['meta']['code'] == 400:
-		flash("Error loading profile. Make sure profile is public and exists.")		
-		return redirect(url_for("home"))
+			all_data = {}
 
-	# Get user info as dict, used to populate
-	user_info = user_request.json()['data']
+			# load as json object
+			json_src = json.loads(raw_json_src)
 
-	# Get media data for last 20 posts
-	if user_request.json()['data']['counts']['media'] == 0:
-		flash("Error. User has no media.")		
-		return redirect(url_for("home"))
+			raw_user_data = json_src['entry_data']['ProfilePage'][0]['graphql']['user']
 
-	media_request = requests.get("https://api.instagram.com/v1/users/%s/media/recent/?access_token=%s&count=33" % (user_id, creds.ACCESS_TOKEN))
+			# case for private user
+			if raw_user_data['is_private']:
+				missingDataError("user is private")
 
-	# return json.dumps(media_request.json()['data'])
+			# catch if data is missing
+			user_data = {"username" : raw_user_data['username'] if not None else missingDataError("could not load"),
+						"followed_by" : raw_user_data['edge_followed_by']['count'] if not None else missingDataError("could not load"),
+						"following" : raw_user_data['edge_follow']['count'] if not None else missingDataError("could not load")
+						}
 
-	likes = []
-	comments = []
-	days = []
-	hours = []
-	filters = []
-	locations = []
-	tags = []
-	tag_positions = []
-	date_range = []
+			media_arr = []
 
-	# Add date range
-	date_range.append(datetime.datetime.fromtimestamp(int(media_request.json()['data'][0]['created_time'])).strftime('%b %e/%y'))
-	date_range.append(datetime.datetime.fromtimestamp(int(media_request.json()['data'][len(media_request.json()['data'])-1]['created_time'])).strftime('%b %e/%y'))
-
-	print len(media_request.json()['data'])
-	# Loop and get relevant data
-	for i in range(0, len(media_request.json()['data'])):
-		try:
-			likes.append(media_request.json()['data'][i]['likes']['count'])
-			comments.append(media_request.json()['data'][i]['comments']['count'])
-			days.append(datetime.datetime.fromtimestamp(int(media_request.json()['data'][i]['created_time'])).strftime('%a'))
-			hours.append(datetime.datetime.fromtimestamp(int(media_request.json()['data'][i]['created_time'])).strftime('%H'))
-			filters.append(media_request.json()['data'][i]['filter'])
-			locations.append([media_request.json()['data'][i]['location']['latitude'], media_request.json()['data'][i]['location']['longitude']])		
-			
-			for x in range(0, len(media_request.json()['data'][i]['users_in_photo'])):
-				tags.append(media_request.json()['data'][i]['users_in_photo'][x]['user']['username'])
-				tag_positions.append([media_request.json()['data'][i]['users_in_photo'][x]['position']['x'], media_request.json()['data'][i]['users_in_photo'][x]['position']['y']])
-		
-		except (KeyError, TypeError, IndexError) as e:
-			pass
+			# max 12 media
+			for med in raw_user_data['edge_owner_to_timeline_media']['edges']:
+				media_arr.append({
+					"likes" : med['node']['edge_liked_by']['count'],
+					"video" : med['node']['is_video'],
+					"caption" : med['node']['edge_media_to_caption']['edges'][0]['node']['text'],
+					"comments" : med['node']['edge_media_to_comment']['count'],
+					"timestamp" : med['node']['taken_at_timestamp'],
+					"weekday" : datetime.datetime.fromtimestamp(med['node']['taken_at_timestamp']).strftime('%a'),
+					"hour" : datetime.datetime.fromtimestamp(med['node']['taken_at_timestamp']).strftime('%H')
+				})
 
 
-	# AMATEUR HOUR AHEAD
+			# make new data structure
+			all_data['user_info'] = user_data
+			all_data['media_info'] = media_arr
 
-	days_pos = [["Mon", 0],["Tue", 0],["Wed", 0],["Thu", 0],["Fri", 0],["Sat", 0],["Sun", 0]]
+			return json.dumps(all_data)
 
-	for i in range(0, len(days)):
-		for j in range(0, len(days_pos)):
-			if days[i] in days_pos[j][0]:
-				days_pos[j][1] = days_pos[j][1] + 1
+	# return render_template('chart.html', all_data=all_data)
 
+def missingDataError(msg):
+	flash("Error loading profile: {}".format(msg))		
+	return redirect(url_for("home"))
 
-	hours_pos = [["00",0],["01",0],["02",0],["03",0],["04",0],["05",0],["06",0],["07",0],["08",0],["09",0],["10",0],["11",0],["12",0],["13",0],["14",0],["15",0],["16",0],["17",0],["18",0],["19",0],["20",0],["21",0],["22",0],["23",0]]
-
-	for i in range(0, len(hours)):
-		for j in range(0, len(hours_pos)):
-			if hours[i] in hours_pos[j][0]:
-				hours_pos[j][1] = hours_pos[j][1] + 1
-
-
-	filters_arr = []
-
-	for key, value in dict(Counter(filters)).iteritems():
-		temp = [str(key),value]
-		filters_arr.append(temp)
-
-	all_data = {}
-	all_data['basic'] = user_info
-	all_data['likes'] = list(reversed(likes)) 
-	all_data['comments'] = list(reversed(comments))
-	all_data['days'] = days_pos
-	all_data['hours'] = hours_pos
-	all_data['filters'] = filters_arr
-	all_data['locations'] = locations
-	all_data['tags'] = set(tags)
-	all_data['tag_positions'] = tag_positions
-	all_data['date_range'] = date_range
-
-	return render_template('chart.html', all_data=all_data)
-
-def closest_match(obj, match):
-
-	res = None
-
-	for i in range(0,len(obj)):
-		if obj[i]['username'] == match.lower():
-			res = obj[i]['id']
-			break
-
-	return res
 
 if __name__ == "__main__":
     app.debug = True
