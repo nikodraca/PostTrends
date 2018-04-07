@@ -22,136 +22,20 @@
 	  ga('send', 'pageview');
 
 	</script>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Lato:300" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
 
 </head>
 
-<style>
-
-    h1, h2, h3, h4, h5 {
-		font-family: 'Lato', sans-serif;
-    }
-
-    body, html {
-        background-color: #FAFAFA;
-    }
-
-    #sidebar {
-        height: 100vh;
-        background-color: white;
-        text-align: center;
-        position: fixed;
-        top: 0;
-        padding-right: 0px;
-    }
-
-    #data {
-        padding-right: 0px;
-        padding-left: 0px;
-        text-align: center;
-		top: 0;
-		bottom: 0;
-		right:0;
-		position:fixed;
-		overflow-y:scroll;
-		overflow-x:hidden;
-
-    }
-
-    #username-text {
-        margin-bottom: 20px;
-    }
-
-    #chart_div {
-
-		text-align: center;
-		padding-top: 3%;
-		padding-bottom: 5%;
-
-    }
-
-    img {
-        border-radius: 50%;
-    }
-
-    .row {
-        height: 100vh;
-        margin-right: 0px;
-        margin-left: 0px;
-    }
-
-    canvas {
-	    display: block;
-	    margin: 0 auto;
-    }
-
-    #logo, #stats-fs, #stats-fg {
-        padding-top: 5%;
-    }
-     #header {
-     	/*padding-top: 3%;*/
-
-     }
-
-    .form-control {
-		width: 60%;
-		display: inline-block;;
-		text-align: center;
-
-     }
-
-	#home-page  {
-		text-decoration: none;
-		color: black;
-	}
-
-    @media screen and (max-width: 1000px) {
-        #sidebar {
-            height: 100vh;
-            background-color: white;
-            text-align: center;
-            position: relative;
-            top: 0;
-            padding-right: 0px;
-        }
-
-        #data {
-            padding-right: 0px;
-            padding-left: 0px;
-            text-align: center;
-            top: 0;
-            bottom: 0;
-            right:0;
-            position:relative;
-            overflow-y:scroll;
-            overflow-x:hidden;
-        }
-
-        #header {
-            display: none;
-        }
-    }
-     sup {
-      font-size: 9px;
-      top: -1.1em;
-     }
-
-
-
-
-</style>
-
 <body>
-<!-- {{all_data['basic']}} -->
-
-
 
 <div class="row">
     <div class="col-sm-3" id="sidebar">
         <a href="/" id="home-page"><h4 id="logo"><i class="fa fa-pie-chart" aria-hidden="true"></i> PostTrends <sup>BETA</sup></h4></a>
         <br>
-        <h1 id="username-text">{{all_data['basic']['username']}}</h1>
+        <h1 id="username-text">{{all_data['userinfo']['username']}}</h1>
         <img src="{{all_data['basic']['profile_picture']}}">
         <h4 id="stats-fs">{{'{0:,}'.format(all_data['basic']['counts']['followed_by'])}} followers</h4>
         <h4 id="stats-fs">{{'{0:,}'.format(all_data['basic']['counts']['follows'])}} following</h4>

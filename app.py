@@ -55,9 +55,11 @@ def get_data(user_input):
 				missingDataError("user is private")
 
 			# catch if data is missing
-			user_data = {"username" : raw_user_data['username'] if not None else missingDataError("could not load"),
-						"followed_by" : raw_user_data['edge_followed_by']['count'] if not None else missingDataError("could not load"),
-						"following" : raw_user_data['edge_follow']['count'] if not None else missingDataError("could not load")
+			user_data = {
+							"username" : raw_user_data['username'] if not None else missingDataError("could not load"),
+							"followed_by" : raw_user_data['edge_followed_by']['count'] if not None else missingDataError("could not load"),
+							"following" : raw_user_data['edge_follow']['count'] if not None else missingDataError("could not load"),
+							"profile_picture" : raw_user_data['profile_pic_url'] if not None else missingDataError("could not load")
 						}
 
 			# weekdays list
