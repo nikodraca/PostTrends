@@ -222,8 +222,6 @@ var myRadarChart = new Chart(ctx, {
                 display: false
             }
         }
-
-
     }
 });
 
