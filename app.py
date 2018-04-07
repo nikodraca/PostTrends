@@ -36,7 +36,8 @@ def get_data(user_input):
 
 	# case for incorrect username
 	if len(user_soup.findAll('div', attrs={'class':'error-container'})) > 0:
-		missingDataError("user does not exist.")
+		flash("Error loading profile: user does not exist")
+		return redirect(url_for("home"))
 
 	# find json in page
 	for src in user_soup.findAll('script'):
@@ -52,15 +53,20 @@ def get_data(user_input):
 
 			# case for private user
 			if raw_user_data['is_private']:
-				missingDataError("user is private")
+				flash("Error loading profile: user is private")
+				return redirect(url_for("home"))
 
 			# catch if data is missing
-			user_data = {
-				"username" : raw_user_data['username'] if not None else missingDataError("could not load"),
-				"followed_by" : raw_user_data['edge_followed_by']['count'] if not None else missingDataError("could not load"),
-				"following" : raw_user_data['edge_follow']['count'] if not None else missingDataError("could not load"),
-				"profile_picture" : raw_user_data['profile_pic_url'] if not None else missingDataError("could not load")
-			}
+			try:
+				user_data = {
+					"username" : raw_user_data['username'],
+					"followed_by" : raw_user_data['edge_followed_by']['count'],
+					"following" : raw_user_data['edge_follow']['count'],
+					"profile_picture" : raw_user_data['profile_pic_url']
+				}
+			except KeyError:
+				flash("Error loading profile.")
+				return redirect(url_for("home"))
 
 			# weekdays list
 			weekdays_count = []
@@ -86,7 +92,6 @@ def get_data(user_input):
 				media_dict = {
 					"likes" : med['node']['edge_liked_by']['count'],
 					"video" : med['node']['is_video'],
-					"caption" : med['node']['edge_media_to_caption']['edges'][0]['node']['text'],
 					"comments" : med['node']['edge_media_to_comment']['count'],
 					"date" : datetime.datetime.fromtimestamp(med['node']['taken_at_timestamp']).strftime('%y/%m/%d'),
 					"weekday" : datetime.datetime.fromtimestamp(med['node']['taken_at_timestamp']).strftime('%w'),
@@ -110,10 +115,6 @@ def get_data(user_input):
 			all_data['hours_count'] = hours_count
 
 	return render_template('chart.html', all_data=all_data)
-
-def missingDataError(msg):
-	flash("Error loading profile: {}".format(msg))		
-	return redirect(url_for("home"))
 
 
 if __name__ == "__main__":
