@@ -113,8 +113,11 @@
 
 <script type="text/javascript">
     $("#username-text").fitText();     
-</script>
 
+    // load JSON
+    var allData = JSON.parse('{{ all_data | tojson | safe}}');
+
+</script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/posttrends_charts.js') }}"></script>
 
 

@@ -88,7 +88,7 @@ def get_data(user_input):
 					"video" : med['node']['is_video'],
 					"caption" : med['node']['edge_media_to_caption']['edges'][0]['node']['text'],
 					"comments" : med['node']['edge_media_to_comment']['count'],
-					"timestamp" : med['node']['taken_at_timestamp'],
+					"date" : datetime.datetime.fromtimestamp(med['node']['taken_at_timestamp']).strftime('%y/%m/%d'),
 					"weekday" : datetime.datetime.fromtimestamp(med['node']['taken_at_timestamp']).strftime('%w'),
 					"hour" : datetime.datetime.fromtimestamp(med['node']['taken_at_timestamp']).strftime('%-H')
 				}

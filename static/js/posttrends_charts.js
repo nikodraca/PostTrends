@@ -1,5 +1,15 @@
-// Extract JSON
+// prepare data
 
+var dateLabels = [];
+var likesList = [];
+var commentsList = [];
+
+for (var i = allData['media_info'].length - 1; i >= 0; i--) {
+    dateLabels.push(allData['media_info'][i]['date']);
+    likesList.push(allData['media_info'][i]['likes']);
+    commentsList.push(allData['media_info'][i]['comments']);
+
+}
 
 // <---- Likes trend ---->
 
@@ -8,11 +18,11 @@ var ctx = document.getElementById("likesChart");
 var myChart = new Chart(ctx, {
     type: 'line',
     data: {
-        labels: newOldArr,
+        labels: dateLabels,
         datasets: [{
         	fill: false,
         	pointRadius: 0,
-            data: {{all_data['likes']}},
+            data: likesList,
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
             ],
@@ -67,7 +77,7 @@ var myChart = new Chart(ctx, {
         datasets: [{
             fill: false,
             pointRadius: 0,
-            data: {{all_data['comments']}},
+            data: null,
             backgroundColor: [
                 'rgba(30, 80, 190, 0.2)',
             ],
@@ -113,13 +123,6 @@ var myChart = new Chart(ctx, {
 
 var ctx = document.getElementById("daysRadar");
 
-var dayLabel = {{all_data['days']|safe}}.map(function(tuple) {
-    return tuple[0];
-});
-var dayValue = {{all_data['days']|safe}}.map(function(tuple) {
-    return tuple[1];
-});
-
 var data = {
     labels: dayLabel,
     datasets: [
@@ -163,12 +166,6 @@ var myRadarChart = new Chart(ctx, {
 
 var ctx = document.getElementById("hoursRadar");
 
-var hourLabel = {{all_data['hours']|safe}}.map(function(tuple) {
-    return tuple[0];
-});
-var hourValue = {{all_data['hours']|safe}}.map(function(tuple) {
-    return tuple[1];
-});
 
 var data = {
     labels: hourLabel,
@@ -207,54 +204,6 @@ var myRadarChart = new Chart(ctx, {
 });
 
 
-var ctx = document.getElementById("filtersBar");
-
-var hourLabel = {{all_data['filters']|safe}}.map(function(tuple) {
-    return tuple[0];
-});
-var hourValue = {{all_data['filters']|safe}}.map(function(tuple) {
-    return tuple[1];
-});
-
-var data = {
-    labels: hourLabel,
-    datasets: [
-        {
-            backgroundColor: "#918EF4",
-            hoverBackgroundColor: "#918EF4",
-            borderWidth: 0,
-            data: hourValue
-        }
-    ]
-};
-
-var myBarChart = new Chart(ctx, {
-    type: 'bar',
-    data: data,
-    options: {
-        responsive: false,
-        legend: {
-            display: false,
-        },
-        scales: {
-		    xAxes: [{
-		                gridLines: {
-		                    display:false
-		                }
-		            }],
-		    yAxes: [{
-		                gridLines: {
-		                    display:false
-		                },
-		                ticks: {
-		              		display: false
-		                }   
-		            }]
-        }
-    }
-});
-
-
 
 var ctx = document.getElementById("followRatio");
 
@@ -264,7 +213,7 @@ var data = {
         {
             backgroundColor: ['#DA627D','#5AB1BB'],
             hoverBackgroundColor: ['#DA627D','#5AB1BB'],
-            data: [{{all_data['basic']['counts']['followed_by']}}, {{all_data['basic']['counts']['follows']}}],
+            data: null,
             borderWidth: 2,
         }
     ]
@@ -283,32 +232,3 @@ var myDoughnut = new Chart(ctx, {
 });
 
 
-// tag position 
-
-var ctx = document.getElementById("tagPos");
-
-var tagPos = {{all_data['tag_positions']}};
-var tagArr = [];
-
-for (var i = 0; i < tagPos.length; i++) {
-    
-    tagArr.push( 
-        {
-            x: tagPos[i][0],
-            y: tagPos[i][1],
-            r: 5
-        });
-};
-
-console.log(tagArr);
-
-
-var data = {
-
-    datasets: [
-        {
-            data: tagArr,
-            backgroundColor:"#FF6384",
-            hoverBackgroundColor: "#FF6384",
-        }]
-};
