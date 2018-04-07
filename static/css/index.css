@@ -1,0 +1,87 @@
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Lato', sans-serif;
+}
+
+body, html {
+    background-color: #FAFAFA;
+}
+
+#sidebar {
+    height: 100vh;
+    background-color: white;
+    text-align: center;
+    position: fixed;
+    top: 0;
+    padding-right: 0px;
+}
+
+#data {
+    padding-right: 0px;
+    padding-left: 0px;
+    text-align: center;
+    top: 0;
+    bottom: 0;
+    right:0;
+    position:fixed;
+    overflow-y:scroll;
+    overflow-x:hidden;
+
+}
+#chart_div {
+
+text-align: center;
+padding-top: 3%;
+padding-bottom: 5%;
+
+}
+
+img {
+    border-radius: 50%;
+}
+
+.row {
+    height: 100vh;
+    margin-right: 0px;
+    margin-left: 0px;
+    text-align: center;
+}
+
+canvas {
+  display: block;
+  margin: 0 auto;
+}
+
+#logo, #stats-fs, #stats-fg {
+    padding-top: 5%;
+}
+ #header {
+  /*padding-top: 3%;*/
+
+ }
+
+ .form-control {
+    width: 60%;
+    display: inline-block;
+    text-align: center;
+ }
+
+ #header {
+  padding-top: 5%;
+  padding-bottom: 2%;
+ }
+
+ sup {
+  font-size: 14px;
+  top: -2.0em;
+ }
+
+@media screen and (max-width: 598px) {
+    #logo {
+      padding-top: 30%;
+    }
+
+    #username-input{
+      padding-top: 10%;
+    }
+}
