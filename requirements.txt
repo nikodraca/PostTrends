@@ -1,8 +1,13 @@
 BeautifulSoup==3.2.1
+beautifulsoup4==4.6.0
+bs4==0.0.1
+fake-useragent==0.1.10
 Flask==0.10.1
 Flask-WTF==0.12
 gunicorn==19.3.0
 httplib2==0.9.1
+hyperlink==18.0.0
+idna==2.6
 itsdangerous==0.24
 Jinja2==2.8
 MarkupSafe==0.23

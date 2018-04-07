@@ -3,6 +3,8 @@
 <head>
     <title>PostTrends | Simple Instagram Analytics</title>
 
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
     <script type="text/javascript" src="{{ url_for('static', filename='js/posttrends.js') }}"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"
@@ -22,139 +24,23 @@
 	  ga('send', 'pageview');
 
 	</script>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Lato:300" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
 
 </head>
 
-<style>
-
-    h1, h2, h3, h4, h5 {
-		font-family: 'Lato', sans-serif;
-    }
-
-    body, html {
-        background-color: #FAFAFA;
-    }
-
-    #sidebar {
-        height: 100vh;
-        background-color: white;
-        text-align: center;
-        position: fixed;
-        top: 0;
-        padding-right: 0px;
-    }
-
-    #data {
-        padding-right: 0px;
-        padding-left: 0px;
-        text-align: center;
-		top: 0;
-		bottom: 0;
-		right:0;
-		position:fixed;
-		overflow-y:scroll;
-		overflow-x:hidden;
-
-    }
-
-    #username-text {
-        margin-bottom: 20px;
-    }
-
-    #chart_div {
-
-		text-align: center;
-		padding-top: 3%;
-		padding-bottom: 5%;
-
-    }
-
-    img {
-        border-radius: 50%;
-    }
-
-    .row {
-        height: 100vh;
-        margin-right: 0px;
-        margin-left: 0px;
-    }
-
-    canvas {
-	    display: block;
-	    margin: 0 auto;
-    }
-
-    #logo, #stats-fs, #stats-fg {
-        padding-top: 5%;
-    }
-     #header {
-     	/*padding-top: 3%;*/
-
-     }
-
-    .form-control {
-		width: 60%;
-		display: inline-block;;
-		text-align: center;
-
-     }
-
-	#home-page  {
-		text-decoration: none;
-		color: black;
-	}
-
-    @media screen and (max-width: 1000px) {
-        #sidebar {
-            height: 100vh;
-            background-color: white;
-            text-align: center;
-            position: relative;
-            top: 0;
-            padding-right: 0px;
-        }
-
-        #data {
-            padding-right: 0px;
-            padding-left: 0px;
-            text-align: center;
-            top: 0;
-            bottom: 0;
-            right:0;
-            position:relative;
-            overflow-y:scroll;
-            overflow-x:hidden;
-        }
-
-        #header {
-            display: none;
-        }
-    }
-     sup {
-      font-size: 9px;
-      top: -1.1em;
-     }
-
-
-
-
-</style>
-
 <body>
-<!-- {{all_data['basic']}} -->
-
-
 
 <div class="row">
     <div class="col-sm-3" id="sidebar">
         <a href="/" id="home-page"><h4 id="logo"><i class="fa fa-pie-chart" aria-hidden="true"></i> PostTrends <sup>BETA</sup></h4></a>
         <br>
-        <h1 id="username-text">{{all_data['basic']['username']}}</h1>
-        <img src="{{all_data['basic']['profile_picture']}}">
-        <h4 id="stats-fs">{{'{0:,}'.format(all_data['basic']['counts']['followed_by'])}} followers</h4>
-        <h4 id="stats-fs">{{'{0:,}'.format(all_data['basic']['counts']['follows'])}} following</h4>
+        <h1 id="username-text">{{all_data['user_info']['username']}}</h1>
+        <img src="{{all_data['user_info']['profile_picture']}}">
+        <h4 id="stats-fs">{{'{0:,}'.format(all_data['user_info']['followed_by'])}} followers</h4>
+        <h4 id="stats-fs">{{'{0:,}'.format(all_data['user_info']['following'])}} following</h4>
         <br>
         <hr>
 
@@ -171,12 +57,12 @@
 <h3 id="header">Snapshot</h3>
 <hr>
     <div class="col-sm-6" id="chart_div" >
-        <h4> <i class="fa fa-heart" aria-hidden="true"></i> {{ '{0:,}'.format(all_data['likes'] | sum())}} Likes </h4>
+        <h4> <i class="fa fa-heart" aria-hidden="true"></i> <span id="total_likes"></span> Likes</h4>
         <br>        
         <canvas id="likesChart" width="350" height="200"></canvas>
     </div>
     <div class="col-sm-6" id="chart_div" >
-        <h4> <i class="fa fa-comment" aria-hidden="true"></i> {{ '{0:,}'.format(all_data['comments'] | sum()) }} Comments </h4>
+        <h4> <i class="fa fa-comment" aria-hidden="true"></i> <span id="total_comments"></span> Comments</h4>
         <br>        
         <canvas id="commentsChart" width="350" height="200"></canvas>
     </div>
@@ -190,40 +76,17 @@
         <br>        
         <canvas id="hoursRadar" width="350" height="200"></canvas>
     </div>
-    <div class="col-sm-6" id="chart_div" >
-        <h4> <i class="fa fa-filter" aria-hidden="true"></i> Filters</h4>
-        <br>        
-        <canvas id="filtersBar" width="350" height="200"></canvas>
-    </div>
-	<div class="col-sm-6" id="chart_div" >
+	<div class="col-sm-12" id="chart_div" >
         <h4> <i class="fa fa-adjust" aria-hidden="true"></i> 
-            {% if all_data['basic']['counts']['follows'] == 0%}
+            {% if all_data['user_info']['following'] == 0%}
                 Infinite Follow Ratio
             {% else %}
-                {{(all_data['basic']['counts']['followed_by']/all_data['basic']['counts']['follows'])|round(1)}}
+                {{(all_data['user_info']['followed_by']/all_data['user_info']['following'])|round(1)}}
              Follow Ratio
              {% endif %}
          </h4>
         <br>        
         <canvas id="followRatio" width="350" height="200"></canvas>
-    </div>
-
-<!-- 
-    <div class="col-sm-6" id="chart_div" >
-        <h4> <i class="fa fa-filter" aria-hidden="true"></i> Filters</h4>
-        <br>        
-        <canvas id="tagPos" width="350" height="200"></canvas>
-    </div>
- -->
-
-    <div class="col-sm-12" style="padding-bottom: 5%;">
-    <h4> <i class="fa fa-users" aria-hidden="true"></i> Tagged Users</h4>
-    <br>
-        {% for x in all_data['tags'] %}
-            <div class="col-sm-4">
-                <a href="#" onclick="showSnapshot('{{ x }}');">{{ x }}</a>
-            </div>
-        {% endfor %}
     </div>
 
 
@@ -234,362 +97,15 @@
 </body>
 </html>
 
-<script>
-  jQuery("#username-text").fitText();
-</script>
-
 <script type="text/javascript">
+    $("#username-text").fitText();     
 
-var newOldArr = new Array();
-newOldArr.push("{{all_data['date_range'][1]}}");
+    // load JSON
+    var allData = JSON.parse('{{ all_data | tojson | safe}}');
 
-for (var i = 0; i < {{all_data['likes']}}.length; i++) {
-    newOldArr.push("");
-};
-
-newOldArr.push("{{all_data['date_range'][0]}}");
-
-// <---- Likes trend ---->
-
-var ctx = document.getElementById("likesChart");
-
-var myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: newOldArr,
-        datasets: [{
-        	fill: false,
-        	pointRadius: 0,
-            data: {{all_data['likes']}},
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-            ],
-            borderColor: [
-                '#DA627D',        
-            ],
-            borderWidth: 3
-        },
-        ]
-    },
-    options: {
-        responsive: false,
-        scales: {
-            xAxes: [{
-            	display: true,
-	        	gridLines: {display: false},
-                ticks: {
-                    display: true
-                }
-            }],
-
-	        yAxes: [{
-                display: true,
-                ticks: {
-                    display: false,
-                    maxTicksLimit: 5
-                },
-
-	        	gridLines: {display: false},
-                ticks: {
-                    beginAtZero:false
-                }
-            }],
-
-        },
-        legend: {
-        	display: false,
-        },
-
-    }
-});
-// <---- End likes trend ---->
-
-// <---- Comments trend ---->
-
-var ctx = document.getElementById("commentsChart");
-
-var myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: newOldArr,
-        datasets: [{
-            fill: false,
-            pointRadius: 0,
-            data: {{all_data['comments']}},
-            backgroundColor: [
-                'rgba(30, 80, 190, 0.2)',
-            ],
-            borderColor: [
-                '#5AB1BB',
-            ],
-            borderWidth: 3
-        },
-        ]
-    },
-    options: {
-        responsive: false,
-        scales: {
-            xAxes: [{
-                display: true,
-                gridLines: {display: false},
-                ticks: {
-                    display: true
-                }
-            }],
-
-            yAxes: [{
-                display: true,
-                ticks: {
-                    display: false,
-                    maxTicksLimit: 5
-                },
-
-                gridLines: {display: false},
-                ticks: {
-                    beginAtZero:false
-                }
-            }],
-        },
-        legend: {
-            display: false,
-        },
-    }
-});
-// <---- End Comments trend ---->
-
-// <---- Days ---->
-
-var ctx = document.getElementById("daysRadar");
-
-var dayLabel = {{all_data['days']|safe}}.map(function(tuple) {
-    return tuple[0];
-});
-var dayValue = {{all_data['days']|safe}}.map(function(tuple) {
-    return tuple[1];
-});
-
-var data = {
-    labels: dayLabel,
-    datasets: [
-        {
-            backgroundColor: "#5FBB97",
-        	pointRadius: 0,
-            borderColor: "#5FBB97",
-            pointBackgroundColor: "rgba(179,181,198,1)",
-            pointBorderColor: "#fff",
-            pointHoverBackgroundColor: "#fff",
-            pointHoverBorderColor: "rgba(179,181,198,1)",
-            data: dayValue
-        }
-    ]
-};
-
-var myRadarChart = new Chart(ctx, {
-    type: 'radar',
-    data: data,
-    options: {
-	        responsive: false,
-
-        legend: {
-            display: false,
-        },
-        scale: {
-            gridLines: {display: false},
-            ticks: {
-                display: false
-            }
-        }
-
-
-    }
-});
-
-// <---- Days end ---->
-
-
-// <---- Hours ---->
-
-var ctx = document.getElementById("hoursRadar");
-
-var hourLabel = {{all_data['hours']|safe}}.map(function(tuple) {
-    return tuple[0];
-});
-var hourValue = {{all_data['hours']|safe}}.map(function(tuple) {
-    return tuple[1];
-});
-
-var data = {
-    labels: hourLabel,
-    datasets: [
-        {
-            backgroundColor: "#FE938C",
-        	pointRadius: 0,
-            borderColor: "#FE938C",
-            pointBackgroundColor: "rgba(179,181,198,1)",
-            pointBorderColor: "#fff",
-            pointHoverBackgroundColor: "#fff",
-            pointHoverBorderColor: "rgba(179,181,198,1)",
-            data: hourValue
-        }
-    ]
-};
-
-var myRadarChart = new Chart(ctx, {
-    type: 'radar',
-    data: data,
-    options: {
-	        responsive: false,
-
-        legend: {
-            display: false,
-        },
-        scale: {
-            gridLines: {display: false},
-            ticks: {
-                display: false
-            }
-        }
-
-
-    }
-});
-
-
-var ctx = document.getElementById("filtersBar");
-
-var hourLabel = {{all_data['filters']|safe}}.map(function(tuple) {
-    return tuple[0];
-});
-var hourValue = {{all_data['filters']|safe}}.map(function(tuple) {
-    return tuple[1];
-});
-
-var data = {
-    labels: hourLabel,
-    datasets: [
-        {
-            backgroundColor: "#918EF4",
-            hoverBackgroundColor: "#918EF4",
-            borderWidth: 0,
-            data: hourValue
-        }
-    ]
-};
-
-var myBarChart = new Chart(ctx, {
-    type: 'bar',
-    data: data,
-    options: {
-        responsive: false,
-        legend: {
-            display: false,
-        },
-        scales: {
-		    xAxes: [{
-		                gridLines: {
-		                    display:false
-		                }
-		            }],
-		    yAxes: [{
-		                gridLines: {
-		                    display:false
-		                },
-		                ticks: {
-		              		display: false
-		                }   
-		            }]
-        }
-    }
-});
-
-
-
-var ctx = document.getElementById("followRatio");
-
-var data = {
-	labels: ['Followers', 'Following'],
-    datasets: [
-        {
-            backgroundColor: ['#DA627D','#5AB1BB'],
-            hoverBackgroundColor: ['#DA627D','#5AB1BB'],
-            data: [{{all_data['basic']['counts']['followed_by']}}, {{all_data['basic']['counts']['follows']}}],
-            borderWidth: 2,
-        }
-    ]
-};
-
-var myDoughnut = new Chart(ctx, {
-    type: 'doughnut',
-    data: data,
-    options: {
-    	cutoutPercentage: 70,	
-        responsive: false,
-        legend: {
-            display: false,
-        },
-    }
-});
-
-
-// tag position 
-
-var ctx = document.getElementById("tagPos");
-
-var tagPos = {{all_data['tag_positions']}};
-var tagArr = [];
-
-for (var i = 0; i < tagPos.length; i++) {
-    
-    tagArr.push( 
-        {
-            x: tagPos[i][0],
-            y: tagPos[i][1],
-            r: 5
-        });
-};
-
-console.log(tagArr);
-
-
-var data = {
-
-    datasets: [
-        {
-            data: tagArr,
-            backgroundColor:"#FF6384",
-            hoverBackgroundColor: "#FF6384",
-        }]
-};
-
-
-
-
-// TAG POSITION 
-
-// var myBubbleChart = new Chart(ctx,{
-//     type: 'bubble',
-//     data: data,
-//     options: {
-//         responsive: false,
-//         legend: {
-//             display: false,
-//         },
-//         scales: {
-//             xAxes: [{
-//                         gridLines: {
-//                             display:false
-//                         }
-//                     }],
-//             yAxes: [{
-//                         gridLines: {
-//                             display:false
-//                         },
-//                     }]
-//         }
-//     }
-// });
-
-
-
-// <---- Days end ---->
 </script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/posttrends_charts.js') }}"></script>
+
+
+
+

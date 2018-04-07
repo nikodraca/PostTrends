@@ -2,6 +2,9 @@
 <html>
 <head>
   <title>PostTrends | Simple Instagram Analytics</title>
+
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
   <script type="text/javascript" src="{{ url_for('static', filename='js/posttrends.js') }}"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"
@@ -14,6 +17,8 @@
   <script src="https://use.fontawesome.com/bd59d293d8.js"></script>
 
   <link href="https://fonts.googleapis.com/css?family=Lato:300" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
+
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -27,91 +32,6 @@
 
 </head>
 
-<style>
-
-    h1, h2, h3, h4, h5 {
-      font-family: 'Lato', sans-serif;
-    }
-
-    body, html {
-        background-color: #FAFAFA;
-    }
-
-    #sidebar {
-        height: 100vh;
-        background-color: white;
-        text-align: center;
-        position: fixed;
-        top: 0;
-        padding-right: 0px;
-    }
-
-    #data {
-        padding-right: 0px;
-        padding-left: 0px;
-        text-align: center;
-        top: 0;
-        bottom: 0;
-        right:0;
-        position:fixed;
-        overflow-y:scroll;
-        overflow-x:hidden;
-
-    }
-    #chart_div {
-
-    text-align: center;
-    padding-top: 3%;
-    padding-bottom: 5%;
-
-    }
-
-    img {
-        border-radius: 50%;
-    }
-
-    .row {
-        height: 100vh;
-        margin-right: 0px;
-        margin-left: 0px;
-        text-align: center;
-    }
-
-    canvas {
-      display: block;
-      margin: 0 auto;
-    }
-
-    #logo, #stats-fs, #stats-fg {
-        padding-top: 5%;
-    }
-     #header {
-      /*padding-top: 3%;*/
-
-     }
-
-     .form-control {
-        width: 60%;
-        display: inline-block;
-        text-align: center;
-     }
-
-     #header {
-      padding-top: 5%;
-      padding-bottom: 2%;
-     }
-
-     sup {
-      font-size: 14px;
-      top: -2.0em;
-     }
-
-    @media screen and (max-width: 598px) {
-        #logo {
-          padding-top: 30%;
-        }
-    }
-</style>
 
 <body>
 
@@ -130,7 +50,7 @@
       {% endwith %}
 
     </div>
-  <div class="col-sm-12">
+  <div class="col-sm-12" id="username-input">
 
   <form type="submit" onsubmit="showSnapshot(); return false;" id="form">
 
