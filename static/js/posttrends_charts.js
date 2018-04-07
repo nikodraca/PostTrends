@@ -3,13 +3,20 @@
 var dateLabels = [];
 var likesList = [];
 var commentsList = [];
+var likesSum = 0;
+var commentsSum = 0;
 
 for (var i = allData['media_info'].length - 1; i >= 0; i--) {
     dateLabels.push(allData['media_info'][i]['date']);
     likesList.push(allData['media_info'][i]['likes']);
     commentsList.push(allData['media_info'][i]['comments']);
-
+    likesSum += allData['media_info'][i]['likes'];
+    commentsSum += allData['media_info'][i]['comments'];
 }
+
+// update headers
+$('#total_likes').text(likesSum);
+$('#total_comments').text(commentsSum);
 
 // <---- Likes trend ---->
 
@@ -73,11 +80,11 @@ var ctx = document.getElementById("commentsChart");
 var myChart = new Chart(ctx, {
     type: 'line',
     data: {
-        labels: newOldArr,
+        labels: dateLabels,
         datasets: [{
             fill: false,
             pointRadius: 0,
-            data: null,
+            data: commentsList,
             backgroundColor: [
                 'rgba(30, 80, 190, 0.2)',
             ],
