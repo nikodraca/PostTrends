@@ -11,6 +11,7 @@ import math
 import datetime
 import creds
 import sys
+import calendar
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -59,28 +60,54 @@ def get_data(user_input):
 						"following" : raw_user_data['edge_follow']['count'] if not None else missingDataError("could not load")
 						}
 
+			# weekdays list
+			weekdays_count = []
+
+			for wd in list(calendar.day_abbr):
+				weekdays_count.append([wd, 0])
+
+			# re-arrange for media counts
+			weekdays_count.insert(0, weekdays_count[-1])
+			weekdays_count.pop()
+
+			# hours list
+			hours_count = []
+
+			for hr in range(0, 24):
+				hours_count.append([str(hr), 0])
+
+			# collect all media
 			media_arr = []
 
 			# max 12 media
 			for med in raw_user_data['edge_owner_to_timeline_media']['edges']:
-				media_arr.append({
+				media_dict = {
 					"likes" : med['node']['edge_liked_by']['count'],
 					"video" : med['node']['is_video'],
 					"caption" : med['node']['edge_media_to_caption']['edges'][0]['node']['text'],
 					"comments" : med['node']['edge_media_to_comment']['count'],
 					"timestamp" : med['node']['taken_at_timestamp'],
-					"weekday" : datetime.datetime.fromtimestamp(med['node']['taken_at_timestamp']).strftime('%a'),
-					"hour" : datetime.datetime.fromtimestamp(med['node']['taken_at_timestamp']).strftime('%H')
-				})
+					"weekday" : datetime.datetime.fromtimestamp(med['node']['taken_at_timestamp']).strftime('%w'),
+					"hour" : datetime.datetime.fromtimestamp(med['node']['taken_at_timestamp']).strftime('%-H')
+				}
+				media_arr.append(media_dict)
+
+				weekdays_count[int(media_dict['weekday'])][1] += 1
+				hours_count[int(media_dict['hour'])][1] += 1
+
+
+			# zero pad hours
+			for x in range(0, len(hours_count)):
+				hours_count[x][0] = str(hours_count[x][0]).zfill(2)
 
 
 			# make new data structure
 			all_data['user_info'] = user_data
 			all_data['media_info'] = media_arr
+			all_data['weekdays_count'] = weekdays_count
+			all_data['hours_count'] = hours_count
 
-			return json.dumps(all_data)
-
-	# return render_template('chart.html', all_data=all_data)
+	return render_template('chart.html', all_data=all_data)
 
 def missingDataError(msg):
 	flash("Error loading profile: {}".format(msg))		
