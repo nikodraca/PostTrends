@@ -74,12 +74,7 @@
         <br>        
         <canvas id="hoursRadar" width="350" height="200"></canvas>
     </div>
-    <div class="col-sm-6" id="chart_div" >
-        <h4> <i class="fa fa-filter" aria-hidden="true"></i> Filters</h4>
-        <br>        
-        <canvas id="filtersBar" width="350" height="200"></canvas>
-    </div>
-	<div class="col-sm-6" id="chart_div" >
+	<div class="col-sm-12" id="chart_div" >
         <h4> <i class="fa fa-adjust" aria-hidden="true"></i> 
             {% if all_data['user_info']['following'] == 0%}
                 Infinite Follow Ratio
@@ -90,17 +85,6 @@
          </h4>
         <br>        
         <canvas id="followRatio" width="350" height="200"></canvas>
-    </div>
-
-
-    <div class="col-sm-12" style="padding-bottom: 5%;">
-    <h4> <i class="fa fa-users" aria-hidden="true"></i> Tagged Users</h4>
-    <br>
-        {% for x in all_data['tags'] %}
-            <div class="col-sm-4">
-                <a href="#" onclick="showSnapshot('{{ x }}');">{{ x }}</a>
-            </div>
-        {% endfor %}
     </div>
 
 

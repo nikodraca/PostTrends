@@ -1,5 +1,4 @@
-// prepare data
-
+// prepare likes/comments data
 var dateLabels = [];
 var likesList = [];
 var commentsList = [];
@@ -12,6 +11,24 @@ for (var i = allData['media_info'].length - 1; i >= 0; i--) {
     commentsList.push(allData['media_info'][i]['comments']);
     likesSum += allData['media_info'][i]['likes'];
     commentsSum += allData['media_info'][i]['comments'];
+}
+
+// prepare days radar data
+var daysPostedLabels = [];
+var daysPostedList = [];
+
+for (var i = 0; i < allData['weekdays_count'].length; i++) {
+    daysPostedLabels.push(allData['weekdays_count'][i][0]);
+    daysPostedList.push(allData['weekdays_count'][i][1]);
+}
+
+// prepare days radar data
+var hoursPostedLabels = [];
+var hoursPostedList = [];
+
+for (var i = 0; i < allData['hours_count'].length; i++) {
+    hoursPostedLabels.push(allData['hours_count'][i][0]);
+    hoursPostedList.push(allData['hours_count'][i][1]);
 }
 
 // update headers
@@ -131,7 +148,7 @@ var myChart = new Chart(ctx, {
 var ctx = document.getElementById("daysRadar");
 
 var data = {
-    labels: dayLabel,
+    labels: daysPostedLabels,
     datasets: [
         {
             backgroundColor: "#5FBB97",
@@ -141,7 +158,7 @@ var data = {
             pointBorderColor: "#fff",
             pointHoverBackgroundColor: "#fff",
             pointHoverBorderColor: "rgba(179,181,198,1)",
-            data: dayValue
+            data: daysPostedList
         }
     ]
 };
@@ -175,7 +192,7 @@ var ctx = document.getElementById("hoursRadar");
 
 
 var data = {
-    labels: hourLabel,
+    labels: hoursPostedLabels,
     datasets: [
         {
             backgroundColor: "#FE938C",
@@ -185,7 +202,7 @@ var data = {
             pointBorderColor: "#fff",
             pointHoverBackgroundColor: "#fff",
             pointHoverBorderColor: "rgba(179,181,198,1)",
-            data: hourValue
+            data: hoursPostedList
         }
     ]
 };
@@ -220,7 +237,7 @@ var data = {
         {
             backgroundColor: ['#DA627D','#5AB1BB'],
             hoverBackgroundColor: ['#DA627D','#5AB1BB'],
-            data: null,
+            data: [allData['user_info']['followed_by'], allData['user_info']['following']],
             borderWidth: 2,
         }
     ]
