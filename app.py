@@ -3,21 +3,18 @@
 
 from flask import Flask, Markup, request, render_template, redirect, url_for, flash
 import requests
-from fake_useragent import UserAgent
 from bs4 import BeautifulSoup
 import json 
 import time
 import math
 import datetime
-import creds
 import sys
 import calendar
-
-reload(sys)
-sys.setdefaultencoding('utf-8')
+import os
+from pprint import pprint
 
 app = Flask(__name__)
-app.secret_key = creds.ACCESS_TOKEN
+app.secret_key = (os.environ.get('HsUdwLRq0pvchIxsxOmg'))
 
 @app.route('/')
 def home():
@@ -26,12 +23,8 @@ def home():
 @app.route('/u/<user_input>', methods=['GET'])
 def get_data(user_input):
 
-	# fake user agent
-	ua = UserAgent()
-	header = {'User-Agent':str(ua.random)}
-
 	# make requests
-	user_request = requests.get("https://www.instagram.com/{}/".format(user_input.lower()), headers=header)
+	user_request = requests.get("https://www.instagram.com/{}/".format(user_input.lower()))
 	user_soup = BeautifulSoup(user_request.text, 'html.parser')
 
 	# case for incorrect username
@@ -39,12 +32,12 @@ def get_data(user_input):
 		flash("Error loading profile: user does not exist")
 		return redirect(url_for("home"))
 
+	all_data = {}
+
 	# find json in page
 	for src in user_soup.findAll('script'):
 		if "window._sharedData" in src.text: 
 			raw_json_src = src.text.replace("window._sharedData = ", "")[:-1]
-
-			all_data = {}
 
 			# load as json object
 			json_src = json.loads(raw_json_src)
@@ -64,6 +57,7 @@ def get_data(user_input):
 					"following" : raw_user_data['edge_follow']['count'],
 					"profile_picture" : raw_user_data['profile_pic_url']
 				}
+
 			except KeyError:
 				flash("Error loading profile.")
 				return redirect(url_for("home"))
@@ -97,10 +91,13 @@ def get_data(user_input):
 					"weekday" : datetime.datetime.fromtimestamp(med['node']['taken_at_timestamp']).strftime('%w'),
 					"hour" : datetime.datetime.fromtimestamp(med['node']['taken_at_timestamp']).strftime('%-H')
 				}
+
 				media_arr.append(media_dict)
 
 				weekdays_count[int(media_dict['weekday'])][1] += 1
 				hours_count[int(media_dict['hour'])][1] += 1
+
+
 
 
 			# zero pad hours
@@ -113,6 +110,8 @@ def get_data(user_input):
 			all_data['media_info'] = media_arr
 			all_data['weekdays_count'] = weekdays_count
 			all_data['hours_count'] = hours_count
+
+			break
 
 	return render_template('chart.html', all_data=all_data)
 
